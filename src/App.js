@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState } from 'react';
+import './App.css'; // นำเข้าไฟล์ CSS
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
 
@@ -13,18 +13,8 @@ export default function App() {
   const [view, setView] = useState('login');
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
-  const [items, setItems] = useState([]); // สถานะเก็บไอเท็มทั้งหมด
-  const [isRolling, setIsRolling] = useState(false); // ตรวจสอบว่ากำลังสุ่มหรือไม่
 
-  useEffect(() => {
-    fetchItems(); // ดึงไอเท็มจาก Backend เมื่อ Component โหลด
-  }, []);
-
-  const fetchItems = async () => {
-    const res = await fetch(`${BACKEND_URL}?action=getItems`);
-    const data = await res.json();
-    setItems(data.items || []);
-  };
+  const [itemList, setItemList] = useState([]); // สร้าง list ของไอเท็ม
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -48,7 +38,7 @@ export default function App() {
   };
 
   const handleDraw = async () => {
-    if (!characterName) return alert('กรุณาใส่ชื่อตัวละครก่อนสุ่ม!');
+    if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
@@ -56,13 +46,14 @@ export default function App() {
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
     } else {
-      setIsRolling(true);
       setItem(data);
       setToken((prev) => prev - 1);
 
-      // เริ่มแอนิเมชันแล้วหยุดเมื่อสุ่มเสร็จ
+      // สร้างแอนิเมชันเลื่อนลง
+      const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']; // ตัวอย่างรายการไอเท็ม
+      setItemList(items); // ใช้ไอเท็มจาก backend จริงๆ แทนรายการนี้
+
       setTimeout(() => {
-        setIsRolling(false);
         setItem(prevItem => ({ ...prevItem, stopAnimation: true }));
       }, 3000); // ใช้เวลา 3 วินาทีสำหรับแอนิเมชัน
     }
@@ -138,22 +129,19 @@ export default function App() {
             onChange={(e) => setCharacterName(e.target.value)}
           />
           <button className="btn" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
-          {isRolling ? (
-            <div className="items-list rolling">
-              {items.map((item, index) => (
-                <div key={index} className="item-name">
-                  {item}
-                </div>
-              ))}
-            </div>
-          ) : (
-            item && (
-              <div className="items-list stop">
-                <div className="item-name stop-animation">
-                  🎁 คุณได้รับ: {item.item} ตัวละคร {item.character}
-                </div>
+
+          <div className="item-list">
+            {itemList.map((item, index) => (
+              <div key={index} className={`item ${item === item.item ? 'stop-animation' : ''}`}>
+                {item}
               </div>
-            )
+            ))}
+          </div>
+
+          {item && (
+            <p className={`item-name ${item.stopAnimation ? 'stop-animation' : ''}`}>
+              🎁 คุณได้รับ: {item.item} ตัวละคร {item.character}
+            </p>
           )}
           <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
         </div>
