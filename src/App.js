@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './App.css';  // นำเข้าไฟล์ CSS
+import React, { useState, useEffect } from 'react';
+import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
 
@@ -13,8 +13,19 @@ export default function App() {
   const [view, setView] = useState('login');
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
+  const [items, setItems] = useState([]); // สถานะเก็บไอเท็มทั้งหมด
+  const [isRolling, setIsRolling] = useState(false); // ตรวจสอบว่ากำลังสุ่มหรือไม่
 
-  // ฟังก์ชันสำหรับการเข้าสู่ระบบหรือสมัครสมาชิก
+  useEffect(() => {
+    fetchItems(); // ดึงไอเท็มจาก Backend เมื่อ Component โหลด
+  }, []);
+
+  const fetchItems = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=getItems`);
+    const data = await res.json();
+    setItems(data.items || []);
+  };
+
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
@@ -36,9 +47,8 @@ export default function App() {
     }
   };
 
-  // ฟังก์ชันสำหรับการสุ่มไอเท็ม
   const handleDraw = async () => {
-    if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
+    if (!characterName) return alert('กรุณาใส่ชื่อตัวละครก่อนสุ่ม!');
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
@@ -46,16 +56,18 @@ export default function App() {
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
     } else {
+      setIsRolling(true);
       setItem(data);
       setToken((prev) => prev - 1);
-      // เริ่มต้นแอนิเมชันแล้วหยุดเมื่อสุ่มเสร็จ
+
+      // เริ่มแอนิเมชันแล้วหยุดเมื่อสุ่มเสร็จ
       setTimeout(() => {
+        setIsRolling(false);
         setItem(prevItem => ({ ...prevItem, stopAnimation: true }));
       }, 3000); // ใช้เวลา 3 วินาทีสำหรับแอนิเมชัน
     }
   };
 
-  // ฟังก์ชันสำหรับแอดมินเติม Token
   const handleAdminAddToken = async () => {
     const params = new URLSearchParams({
       action: 'addtoken',
@@ -126,10 +138,22 @@ export default function App() {
             onChange={(e) => setCharacterName(e.target.value)}
           />
           <button className="btn" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
-          {item && (
-            <p className={`item-name ${item.stopAnimation ? 'stop-animation' : ''}`}>
-              🎁 คุณได้รับ: {item.item} ตัวละคร {item.character}
-            </p>
+          {isRolling ? (
+            <div className="items-list rolling">
+              {items.map((item, index) => (
+                <div key={index} className="item-name">
+                  {item}
+                </div>
+              ))}
+            </div>
+          ) : (
+            item && (
+              <div className="items-list stop">
+                <div className="item-name stop-animation">
+                  🎁 คุณได้รับ: {item.item} ตัวละคร {item.character}
+                </div>
+              </div>
+            )
           )}
           <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
         </div>
