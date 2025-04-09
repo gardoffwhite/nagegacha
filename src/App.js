@@ -40,16 +40,11 @@ export default function App() {
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
-    
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
     } else {
       setItem(data);
       setToken((prev) => prev - 1);
-      // เริ่มต้นแอนิเมชันแล้วหยุดเมื่อสุ่มเสร็จ
-      setTimeout(() => {
-        setItem(prevItem => ({ ...prevItem, stopAnimation: true }));
-      }, 3000); // ใช้เวลา 3 วินาทีสำหรับแอนิเมชัน
     }
   };
 
@@ -124,7 +119,7 @@ export default function App() {
           />
           <button className="btn" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
           {item && (
-            <p className={`item-name ${item.stopAnimation ? 'stop-animation' : ''}`}>
+            <p className={`item-name ${item ? 'stop-animation' : ''}`}>
               🎁 คุณได้รับ: {item.item} ตัวละคร {item.character}
             </p>
           )}
