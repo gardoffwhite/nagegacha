@@ -14,6 +14,7 @@ export default function App() {
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
 
+  // ฟังก์ชันสำหรับการเข้าสู่ระบบหรือสมัครสมาชิก
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
@@ -35,12 +36,13 @@ export default function App() {
     }
   };
 
+  // ฟังก์ชันสำหรับการสุ่มไอเท็ม
   const handleDraw = async () => {
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
-    
+
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
     } else {
@@ -53,6 +55,7 @@ export default function App() {
     }
   };
 
+  // ฟังก์ชันสำหรับแอดมินเติม Token
   const handleAdminAddToken = async () => {
     const params = new URLSearchParams({
       action: 'addtoken',
