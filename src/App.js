@@ -16,19 +16,21 @@ export default function App() {
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, email, password });
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
-    const text = await res.text();
+    const result = await res.json();
 
-    try {
-      const data = JSON.parse(text);
-      if (data.status === 'LoginSuccess') {
-        setIsLoggedIn(true);
-        setView(data.role === 'admin' ? 'admin' : 'dashboard');
-        setToken(data.token);
-      } else {
-        alert('เข้าสู่ระบบไม่สำเร็จ');
-      }
-    } catch (err) {
-      alert(text); // เช่น 'InvalidCredentials'
+    if (result.status === 'LoginSuccess') {
+      setIsLoggedIn(true);
+      setToken(result.token || 0);
+      setView(result.role === 'admin' ? 'admin' : 'dashboard');
+    } else if (result.status === 'Registered') {
+      alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
+      setView('login');
+    } else if (result.status === 'EmailAlreadyExists') {
+      alert('มีบัญชีนี้อยู่แล้ว');
+    } else if (result.status === 'InvalidCredentials') {
+      alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+    } else {
+      alert('เกิดข้อผิดพลาด: ' + result.status);
     }
   };
 
@@ -52,8 +54,8 @@ export default function App() {
       token: adminTokens,
     });
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
-    const text = await res.text();
-    alert(text);
+    const result = await res.json();
+    alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
   };
 
   return (
@@ -64,18 +66,20 @@ export default function App() {
           <input placeholder="อีเมล" value={email} onChange={(e) => setEmail(e.target.value)} />
           <input placeholder="รหัสผ่าน" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button onClick={() => handleAuth('login')}>เข้าสู่ระบบ</button>
-          <p>ยังไม่มีบัญชี? <span onClick={() => setView('register')}>สมัครสมาชิก</span></p>
+          <p>ยังไม่มีบัญชี? <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => setView('register')}>สมัครสมาชิก</span></p>
         </>
       )}
+
       {view === 'register' && (
         <>
           <h2>สมัครสมาชิก</h2>
           <input placeholder="อีเมล" value={email} onChange={(e) => setEmail(e.target.value)} />
           <input placeholder="รหัสผ่าน" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button onClick={() => handleAuth('register')}>สมัครสมาชิก</button>
-          <p>มีบัญชีอยู่แล้ว? <span onClick={() => setView('login')}>เข้าสู่ระบบ</span></p>
+          <p>มีบัญชีอยู่แล้ว? <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => setView('login')}>เข้าสู่ระบบ</span></p>
         </>
       )}
+
       {view === 'dashboard' && (
         <>
           <h2>🎮 ยินดีต้อนรับ!</h2>
@@ -86,6 +90,7 @@ export default function App() {
           <button onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
         </>
       )}
+
       {view === 'admin' && (
         <>
           <h2>🛠️ แอดมิน - เติม Token</h2>
