@@ -133,16 +133,13 @@ export default function App() {
           </div>
 
           {/* รายละเอียดการสุ่ม */}
-          {item && (
-            <div className="item-details">
-              <p className={`item-name ${item.stopAnimation ? 'stop-animation' : ''}`}>
-                🎁 คุณได้รับ: {item}
-              </p>
-              <p>ตัวละคร: {characterName}</p>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
+         {item && (
+  <div className="item-details">
+    <p className={`item-name ${item.stopAnimation ? 'stop-animation' : ''}`}>
+      🎁 คุณได้รับ: {item}
+    </p>
+    <p>ตัวละคร: {characterName}</p>
+    <p>ไอเท็ม: {JSON.stringify(item)}</p> {/* เพิ่มการแสดงผลเพื่อ debug */}
+  </div>
+)}
+
