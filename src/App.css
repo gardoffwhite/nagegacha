@@ -1,5 +1,3 @@
-/* App.css */
-
 .app-container {
   font-family: Arial, sans-serif;
   padding: 20px;
@@ -39,17 +37,16 @@
 /* แอนิเมชันสำหรับการหมุนและเคลื่อนที่จากบนลงล่าง */
 @keyframes rollAndMove {
   0% {
-    transform: translateY(-50px) rotate(0deg);  /* เริ่มต้นจากบน */
+    transform: translateY(-50px) rotate(0deg);
   }
   60% {
-    transform: translateY(100px) rotate(180deg);  /* เลื่อนลงเร็ว */
+    transform: translateY(100px) rotate(180deg);
   }
   100% {
-    transform: translateY(0) rotate(360deg);  /* ช้าลงเมื่อใกล้ถึงตำแหน่งสุดท้าย */
+    transform: translateY(0) rotate(360deg);
   }
 }
 
-/* คลาสที่ใช้สำหรับชื่อไอเท็ม */
 .item-name {
   display: inline-block;
   animation: rollAndMove 3s cubic-bezier(0.2, 0, 0.2, 1); /* การเคลื่อนที่เร็วในช่วงแรกและช้าลง */
