@@ -142,5 +142,3 @@ export default function App() {
     <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
   </div>
 )}
-
-
