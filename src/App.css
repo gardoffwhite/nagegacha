@@ -50,12 +50,13 @@
   align-items: center;
   overflow: hidden;
   height: 300px; /* ขนาดสูงสุดที่แสดง */
+  position: relative;
 }
 
 .item {
   font-size: 20px;
   margin: 5px 0;
-  animation: rollDown 3s ease-out;
+  animation: rollDown 3s ease-out infinite; /* เลื่อนแบบไม่สิ้นสุด */
 }
 
 .item.stop-animation {
@@ -67,4 +68,18 @@
   font-size: 24px;
   font-weight: bold;
   margin-top: 20px;
+}
+
+/* เพิ่มการจัดเรียงตำแหน่ง */
+.draw-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-list-container {
+  position: relative;
+  height: 250px; /* แสดงส่วนนี้แค่เล็กน้อย */
+  overflow: hidden;
 }
