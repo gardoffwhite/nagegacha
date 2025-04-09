@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css'; // นำเข้าไฟล์ CSS
+import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
 
@@ -9,12 +9,11 @@ export default function App() {
   const [characterName, setCharacterName] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState(0);
+  const [items, setItems] = useState([]);
   const [item, setItem] = useState(null);
   const [view, setView] = useState('login');
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
-
-  const [itemList, setItemList] = useState([]); // สร้าง list ของไอเท็ม
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -46,32 +45,34 @@ export default function App() {
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
     } else {
-      setItem(data);
-      setToken((prev) => prev - 1);
-
-      // สร้างแอนิเมชันเลื่อนลง
-      const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']; // ตัวอย่างรายการไอเท็ม
-      setItemList(items); // ใช้ไอเท็มจาก backend จริงๆ แทนรายการนี้
-
-      setTimeout(() => {
-        setItem(prevItem => ({ ...prevItem, stopAnimation: true }));
-      }, 3000); // ใช้เวลา 3 วินาทีสำหรับแอนิเมชัน
+      setItems(data.items);  // รับข้อมูลไอเท็มจาก backend
+      startSlotAnimation(data.items);  // เริ่มแอนิเมชันการเลื่อนไอเท็ม
     }
   };
 
-  const handleAdminAddToken = async () => {
-    const params = new URLSearchParams({
-      action: 'addtoken',
-      username: adminUser,
-      token: adminTokens,
-    });
-    const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
-    const result = await res.json();
-    alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
+  const startSlotAnimation = (items) => {
+    let i = 0;
+    let interval = setInterval(() => {
+      setItem(items[i]);
+      i = (i + 1) % items.length;  // เลื่อนไอเท็มไปเรื่อยๆ
+    }, 100);  // ใช้เวลา 100ms สำหรับการเลื่อนแต่ละขั้น
+
+    setTimeout(() => {
+      clearInterval(interval);  // หยุดแอนิเมชันหลังจาก 3 วินาที
+      setItem(items[Math.floor(Math.random() * items.length)]);  // เลือกไอเท็มสุ่มสุดท้าย
+    }, 3000);  // รอ 3 วินาทีเพื่อให้แอนิเมชันเลื่อนครบ
   };
 
   return (
     <div className="app-container">
+      {/* ชื่อเกมที่มุมซ้าย */}
+      <div className="game-title">🎮 N-age Warzone Gacha!!</div>
+      
+      {/* ปุ่มล็อกเอาต์ที่มุมขวาบน */}
+      {isLoggedIn && (
+        <button className="btn logout-btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+      )}
+
       {view === 'login' && (
         <div className="auth-container">
           <h2>เข้าสู่ระบบ</h2>
@@ -120,51 +121,26 @@ export default function App() {
 
       {view === 'dashboard' && (
         <div className="dashboard-container">
-          <h2>🎮 N-age Warzone Gacha!!</h2>
-          <p>Token คงเหลือ: {token}</p>
-          <input
-            className="input-field"
-            placeholder="ชื่อตัวละครของคุณ"
-            value={characterName}
-            onChange={(e) => setCharacterName(e.target.value)}
-          />
-          <button className="btn" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
-
-          <div className="item-list">
-            {itemList.map((item, index) => (
-              <div key={index} className={`item ${item === item.item ? 'stop-animation' : ''}`}>
-                {item}
-              </div>
-            ))}
+          {/* ป้อนชื่อตัวละครและปุ่มสุ่มติดกัน */}
+          <div className="draw-container">
+            <input
+              className="input-field"
+              placeholder="ชื่อตัวละครของคุณ"
+              value={characterName}
+              onChange={(e) => setCharacterName(e.target.value)}
+            />
+            <button className="btn" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
           </div>
 
+          {/* รายละเอียดการสุ่ม */}
           {item && (
-            <p className={`item-name ${item.stopAnimation ? 'stop-animation' : ''}`}>
-              🎁 คุณได้รับ: {item.item} ตัวละคร {item.character}
-            </p>
+            <div className="item-details">
+              <p className={`item-name ${item.stopAnimation ? 'stop-animation' : ''}`}>
+                🎁 คุณได้รับ: {item}
+              </p>
+              <p>ตัวละคร: {characterName}</p>
+            </div>
           )}
-          <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
-        </div>
-      )}
-
-      {view === 'admin' && (
-        <div className="admin-container">
-          <h2>🛠️ แอดมิน - เติม Token</h2>
-          <input
-            className="input-field"
-            placeholder="ชื่อผู้ใช้"
-            value={adminUser}
-            onChange={(e) => setAdminUser(e.target.value)}
-          />
-          <input
-            className="input-field"
-            placeholder="จำนวน Token"
-            type="number"
-            value={adminTokens}
-            onChange={(e) => setAdminTokens(Number(e.target.value))}
-          />
-          <button className="btn" onClick={handleAdminAddToken}>เติม Token</button>
-          <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
         </div>
       )}
     </div>
