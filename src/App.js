@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css';  // นำเข้าไฟล์ CSS
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
 
@@ -59,47 +60,83 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div className="app-container">
       {view === 'login' && (
-        <>
+        <div className="auth-container">
           <h2>เข้าสู่ระบบ</h2>
-          <input placeholder="ชื่อผู้ใช้" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input placeholder="รหัสผ่าน" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button onClick={() => handleAuth('login')}>เข้าสู่ระบบ</button>
-          <p>ยังไม่มีบัญชี? <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => setView('register')}>สมัครสมาชิก</span></p>
-        </>
+          <input
+            className="input-field"
+            placeholder="ชื่อผู้ใช้"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            className="input-field"
+            placeholder="รหัสผ่าน"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="btn" onClick={() => handleAuth('login')}>เข้าสู่ระบบ</button>
+          <p>
+            ยังไม่มีบัญชี? <span className="link" onClick={() => setView('register')}>สมัครสมาชิก</span>
+          </p>
+        </div>
       )}
 
       {view === 'register' && (
-        <>
+        <div className="auth-container">
           <h2>สมัครสมาชิก</h2>
-          <input placeholder="ชื่อผู้ใช้" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input placeholder="รหัสผ่าน" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button onClick={() => handleAuth('register')}>สมัครสมาชิก</button>
-          <p>มีบัญชีอยู่แล้ว? <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => setView('login')}>เข้าสู่ระบบ</span></p>
-        </>
+          <input
+            className="input-field"
+            placeholder="ชื่อผู้ใช้"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            className="input-field"
+            placeholder="รหัสผ่าน"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="btn" onClick={() => handleAuth('register')}>สมัครสมาชิก</button>
+          <p>
+            มีบัญชีอยู่แล้ว? <span className="link" onClick={() => setView('login')}>เข้าสู่ระบบ</span>
+          </p>
+        </div>
       )}
 
       {view === 'dashboard' && (
-        <>
+        <div className="dashboard-container">
           <h2>🎮 ยินดีต้อนรับ!</h2>
           <p>Token คงเหลือ: {token}</p>
-          <input placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-          <button onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
+          <input
+            className="input-field"
+            placeholder="ชื่อตัวละครของคุณ"
+            value={characterName}
+            onChange={(e) => setCharacterName(e.target.value)}
+          />
+          <button className="btn" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
           {item && <p>🎁 คุณได้รับ: {item.item} จาก {item.character}</p>}
-          <button onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
-        </>
+          <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+        </div>
       )}
 
       {view === 'admin' && (
-        <>
+        <div className="admin-container">
           <h2>🛠️ แอดมิน - เติม Token</h2>
-          <input placeholder="ชื่อผู้ใช้" value={adminUser} onChange={(e) => setAdminUser(e.target.value)} />
-          <input placeholder="จำนวน Token" type="number" value={adminTokens} onChange={(e) => setAdminTokens(Number(e.target.value))} />
-          <button onClick={handleAdminAddToken}>เติม Token</button>
-          <button onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
-        </>
-      )}
-    </div>
-  );
-}
+          <input
+            className="input-field"
+            placeholder="ชื่อผู้ใช้"
+            value={adminUser}
+            onChange={(e) => setAdminUser(e.target.value)}
+          />
+          <input
+            className="input-field"
+            placeholder="จำนวน Token"
+            type="number"
+            value={adminTokens}
+            onChange={(e) => setAdminTokens(Number(e.target.value))}
+          />
+          <button className="btn" onClick={handle
