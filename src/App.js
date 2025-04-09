@@ -36,15 +36,21 @@ export default function App() {
   };
 
   const handleDraw = async () => {
+    if (token <= 0) {
+      alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
+      return; // หาก token เป็น 0 หรือ ติดลบ จะไม่ให้สุ่ม
+    }
+
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
+
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
     } else {
       setItem(data);
-      setToken((prev) => prev - 1);
+      setToken((prev) => prev - 1); // ลด Token หลังจากสุ่ม
     }
   };
 
