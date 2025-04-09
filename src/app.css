@@ -1,68 +1,88 @@
-/* App.css */
+:root {
+  --primary: #0ff;
+  --primary-dark: #00c4c4;
+  --bg-dark: #0d0d0d;
+  --text-light: #e0f7fa;
+}
+
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #f7f7f7;
+  font-family: 'Orbitron', sans-serif;
+  background-color: var(--bg-dark);
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  color: var(--text-light);
 }
 
 .app-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  background-color: #1a1a1a;
+  border: 2px solid var(--primary);
+  box-shadow: 0 0 20px var(--primary-dark);
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 480px;
   width: 100%;
-  max-width: 500px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
-.auth-container, .dashboard-container, .admin-container {
-  width: 100%;
+  margin: auto;
 }
 
 h2 {
-  color: #333;
+  color: var(--primary);
+  text-shadow: 0 0 5px var(--primary);
   text-align: center;
   margin-bottom: 20px;
 }
 
 .input-field {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  background-color: #222;
+  color: var(--text-light);
+  border: 1px solid var(--primary-dark);
+  padding: 12px;
   font-size: 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
 }
 
 .btn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 12px 20px;
+  background: linear-gradient(to right, #0ff, #00c4c4);
+  color: #000;
+  font-weight: bold;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
+  border-radius: 8px;
+  padding: 12px;
   font-size: 16px;
-  margin: 10px 0;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 10px var(--primary);
 }
 
 .btn:hover {
-  background-color: #45a049;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px var(--primary-dark);
 }
 
 .link {
-  color: #007BFF;
+  color: var(--primary);
   cursor: pointer;
+  font-size: 14px;
+  display: inline-block;
+  margin-top: 10px;
+  text-align: center;
 }
 
 .link:hover {
   text-decoration: underline;
+}
+
+.dashboard-container, .admin-container, .auth-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
