@@ -1,6 +1,10 @@
 .app-container {
   font-family: Arial, sans-serif;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .auth-container {
@@ -8,12 +12,16 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
 }
 
 .input-field {
   margin: 10px 0;
   padding: 10px;
-  width: 200px;
+  width: 100%; /* ให้ช่องกรอกเต็มความกว้าง */
+  max-width: 300px; /* จำกัดขนาดช่องกรอก */
 }
 
 .btn {
@@ -23,6 +31,7 @@
   color: white;
   border: none;
   cursor: pointer;
+  width: 100%;
 }
 
 .btn:hover {
@@ -49,14 +58,16 @@
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  height: 300px; /* ขนาดสูงสุดที่แสดง */
+  height: 250px; /* แสดงไอเท็มได้มากขึ้น */
+  width: 100%;
+  max-width: 350px;
   position: relative;
 }
 
 .item {
   font-size: 20px;
   margin: 5px 0;
-  animation: rollDown 3s ease-out infinite; /* เลื่อนแบบไม่สิ้นสุด */
+  animation: rollDown 3s ease-out; /* หยุดแอนิเมชันเมื่อครบเวลา */
 }
 
 .item.stop-animation {
@@ -80,6 +91,6 @@
 
 .item-list-container {
   position: relative;
-  height: 250px; /* แสดงส่วนนี้แค่เล็กน้อย */
+  height: 250px; /* ให้แสดงส่วนนี้แค่เล็กน้อย */
   overflow: hidden;
 }
