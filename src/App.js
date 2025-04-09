@@ -17,11 +17,17 @@ export default function App() {
     const params = new URLSearchParams({ action, email, password });
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
     const text = await res.text();
-    if (text === 'LoginSuccess' || text === 'Registered') {
-      setIsLoggedIn(true);
-      setView(email === 'admin@example.com' ? 'admin' : 'dashboard');
-      setToken(5);
-    } else {
+
+    try {
+      const json = JSON.parse(text);
+      if (json.status === 'LoginSuccess') {
+        setIsLoggedIn(true);
+        setToken(parseInt(json.token));
+        setView(json.role === 'admin' ? 'admin' : 'dashboard');
+      } else {
+        alert(json.status);
+      }
+    } catch (e) {
       alert(text);
     }
   };
