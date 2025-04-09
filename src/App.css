@@ -34,27 +34,30 @@
   cursor: pointer;
 }
 
-/* แอนิเมชันสำหรับการหมุนและเคลื่อนที่จากบนลงล่าง */
-@keyframes rollAndMove {
+/* แอนิเมชันสำหรับการเลื่อนลง */
+@keyframes slideDown {
   0% {
-    transform: translateY(-50px) rotate(0deg);
+    transform: translateY(-100%);
   }
-  60% {
-    transform: translateY(100px) rotate(180deg);
+  50% {
+    transform: translateY(0);
   }
   100% {
-    transform: translateY(0) rotate(360deg);
+    transform: translateY(0);
   }
 }
 
+/* สไตล์การแสดงชื่อไอเท็ม */
 .item-name {
   display: inline-block;
-  animation: rollAndMove 3s cubic-bezier(0.2, 0, 0.2, 1); /* การเคลื่อนที่เร็วในช่วงแรกและช้าลง */
+  animation: slideDown 3s ease-in-out forwards; /* การเลื่อนลงแบบนุ่มนวล */
   font-size: 24px;
   font-weight: bold;
   margin-top: 20px;
+  text-align: center;
 }
 
+/* หยุดแอนิเมชันเมื่อสุ่มเสร็จ */
 .item-name.stop-animation {
-  animation: none; /* หยุดแอนิเมชันเมื่อสุ่มเสร็จ */
+  animation: none; 
 }
