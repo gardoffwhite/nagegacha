@@ -34,8 +34,28 @@
   cursor: pointer;
 }
 
-/* แอนิเมชันสำหรับการเลื่อนลง */
-@keyframes slideDown {
+/* แอนิเมชันสำหรับการเลื่อนลงมา */
+.items-list-container {
+  margin-top: 20px;
+  height: 200px;
+  overflow: hidden;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  animation: scrollDown 3s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.items-list.rolling {
+  animation: scrollDown 3s cubic-bezier(0.2, 0, 0.2, 1) infinite;
+}
+
+.items-list.stop {
+  animation: none;
+}
+
+@keyframes scrollDown {
   0% {
     transform: translateY(-100%);
   }
@@ -47,17 +67,13 @@
   }
 }
 
-/* สไตล์การแสดงชื่อไอเท็ม */
 .item-name {
-  display: inline-block;
-  animation: slideDown 3s ease-in-out forwards; /* การเลื่อนลงแบบนุ่มนวล */
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
-  margin-top: 20px;
+  margin: 10px 0;
   text-align: center;
 }
 
-/* หยุดแอนิเมชันเมื่อสุ่มเสร็จ */
 .item-name.stop-animation {
-  animation: none; 
+  animation: none; /* หยุดแอนิเมชันเมื่อสุ่มเสร็จ */
 }
