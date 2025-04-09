@@ -109,7 +109,7 @@ export default function App() {
 
       {view === 'dashboard' && (
         <div className="dashboard-container">
-          <h2>🎮 ยินดีต้อนรับ!</h2>
+          <h2>🎮 N-age Warzone Gacha!!</h2>
           <p>Token คงเหลือ: {token}</p>
           <input
             className="input-field"
@@ -118,7 +118,11 @@ export default function App() {
             onChange={(e) => setCharacterName(e.target.value)}
           />
           <button className="btn" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
-          {item && <p>🎁 คุณได้รับ: {item.item} จาก {item.character}</p>}
+          {item && (
+            <p className={`item-name ${item ? 'stop-animation' : ''}`}>
+              🎁 คุณได้รับ: {item.item} ตัวละคร {item.character}
+            </p>
+          )}
           <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
         </div>
       )}
