@@ -96,3 +96,6 @@
 
 .item-list-container {
   position: relative;
+  height: 250px; /* ให้แสดงส่วนนี้แค่เล็กน้อย */
+  overflow: hidden;
+}
