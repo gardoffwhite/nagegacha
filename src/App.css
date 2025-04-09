@@ -34,46 +34,37 @@
   cursor: pointer;
 }
 
-/* แอนิเมชันสำหรับการเลื่อนลงมา */
-.items-list-container {
-  margin-top: 20px;
-  height: 200px;
-  overflow: hidden;
-}
-
-.items-list {
-  display: flex;
-  flex-direction: column;
-  animation: scrollDown 3s cubic-bezier(0.2, 0, 0.2, 1);
-}
-
-.items-list.rolling {
-  animation: scrollDown 3s cubic-bezier(0.2, 0, 0.2, 1) infinite;
-}
-
-.items-list.stop {
-  animation: none;
-}
-
-@keyframes scrollDown {
+/* แอนิเมชันสำหรับการหมุนและเคลื่อนที่จากบนลงล่าง */
+@keyframes rollDown {
   0% {
     transform: translateY(-100%);
-  }
-  50% {
-    transform: translateY(0);
   }
   100% {
     transform: translateY(0);
   }
 }
 
-.item-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 10px 0;
-  text-align: center;
+.item-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  height: 300px; /* ขนาดสูงสุดที่แสดง */
 }
 
-.item-name.stop-animation {
+.item {
+  font-size: 20px;
+  margin: 5px 0;
+  animation: rollDown 3s ease-out;
+}
+
+.item.stop-animation {
   animation: none; /* หยุดแอนิเมชันเมื่อสุ่มเสร็จ */
+}
+
+.item-name {
+  display: inline-block;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
 }
