@@ -122,29 +122,25 @@ export default function App() {
           <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
         </div>
       )}
+{view === 'admin' && (
+  <div className="admin-container">
+    <h2>🛠️ แอดมิน - เติม Token</h2>
+    <input
+      className="input-field"
+      placeholder="ชื่อผู้ใช้"
+      value={adminUser}
+      onChange={(e) => setAdminUser(e.target.value)}
+    />
+    <input
+      className="input-field"
+      placeholder="จำนวน Token"
+      type="number"
+      value={adminTokens}
+      onChange={(e) => setAdminTokens(Number(e.target.value))}
+    />
+    <button className="btn" onClick={handleAdminAddToken}>เติม Token</button>
+    <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+  </div>
+)}
 
-      {view === 'admin' && (
-        <div className="admin-container">
-          <h2>🛠️ แอดมิน - เติม Token</h2>
-          <input
-            className="input-field"
-            placeholder="ชื่อผู้ใช้"
-            value={adminUser}
-            onChange={(e) => setAdminUser(e.target.value)}
-          />
-          <input
-            className="input-field"
-            placeholder="จำนวน Token"
-            type="number"
-            value={adminTokens}
-            onChange={(e) => setAdminTokens(Number(e.target.value))}
-          />
-          <button className="btn" onClick={handle
-          <button className="btn" onClick={handleAdminAddToken}>เติม Token</button>
-          <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
-        </div>
-      )}
-    </div>
-  );
-}
 
