@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const BACKEND_URL = https://script.google.com/macros/s/AKfycbw-cFWKCeksp0TxleINc1sxjyZuYAycTsXAxwU_k80-M9ArNUPzEnb63RaD_UPo1UXBMA/exec;
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbw-cFWKCeksp0TxleINc1sxjyZuYAycTsXAxwU_k80-M9ArNUPzEnb63RaD_UPo1UXBMA/exec";
 
 export default function App() {
   const [email, setEmail] = useState('');
