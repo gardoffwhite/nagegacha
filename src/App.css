@@ -1,4 +1,3 @@
-/* จัดรูปแบบส่วนหลักของแอปพลิเคชัน */
 .app-container {
   font-family: Arial, sans-serif;
   padding: 20px;
@@ -8,7 +7,11 @@
   min-height: 100vh;
 }
 
-/* รูปแบบหน้าจอการเข้าสู่ระบบ และการสมัครสมาชิก */
+.game-title {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
 .auth-container {
   display: flex;
   flex-direction: column;
@@ -19,15 +22,13 @@
   margin-top: 20px;
 }
 
-/* ช่องกรอกข้อมูล */
 .input-field {
   margin: 10px 0;
   padding: 10px;
-  width: 100%;
-  max-width: 300px;
+  width: 100%; /* ให้ช่องกรอกเต็มความกว้าง */
+  max-width: 300px; /* จำกัดขนาดช่องกรอก */
 }
 
-/* ปุ่มต่างๆ */
 .btn {
   padding: 10px 20px;
   margin-top: 10px;
@@ -42,7 +43,6 @@
   background-color: #45a049;
 }
 
-/* ลิงก์ที่ใช้ในการเปลี่ยนหน้า */
 .link {
   color: #007bff;
   cursor: pointer;
@@ -58,31 +58,27 @@
   }
 }
 
-/* รูปแบบการแสดงรายการไอเท็ม */
 .item-list {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: auto; /* ให้สามารถเลื่อนดูได้ */
+  overflow: hidden;
   height: 250px; /* แสดงไอเท็มได้มากขึ้น */
   width: 100%;
   max-width: 350px;
   position: relative;
 }
 
-/* รูปแบบของไอเท็มแต่ละตัว */
 .item {
   font-size: 20px;
   margin: 5px 0;
-  animation: rollDown 1s ease-out; /* ลดเวลาแอนิเมชัน */
+  animation: rollDown 3s ease-out; /* หยุดแอนิเมชันเมื่อครบเวลา */
 }
 
-/* หยุดแอนิเมชันเมื่อสุ่มเสร็จ */
 .item.stop-animation {
-  animation: none;
+  animation: none; /* หยุดแอนิเมชันเมื่อสุ่มเสร็จ */
 }
 
-/* แสดงชื่อไอเท็ม */
 .item-name {
   display: inline-block;
   font-size: 24px;
@@ -90,7 +86,7 @@
   margin-top: 20px;
 }
 
-/* การจัดเรียงตำแหน่งของปุ่มและช่องกรอก */
+/* เพิ่มการจัดเรียงตำแหน่ง */
 .draw-container {
   display: flex;
   flex-direction: column;
@@ -98,27 +94,5 @@
   gap: 10px;
 }
 
-/* คอนเทนเนอร์ที่ใช้แสดงรายการไอเท็ม */
 .item-list-container {
   position: relative;
-  height: 300px; /* เพิ่มความสูง */
-  overflow: hidden;
-}
-
-/* รูปแบบสำหรับหน้าแสดงผลการสุ่มไอเท็ม */
-.dashboard-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  width: 100%;
-  max-width: 400px;
-}
-
-/* การแสดงผลตัวละคร */
-.item-details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
