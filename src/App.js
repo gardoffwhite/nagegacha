@@ -15,7 +15,10 @@ export default function App() {
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, email, password });
-    const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
+    const res = await fetch(BACKEND_URL, {
+      method: 'POST',
+      body: params,
+    });
     const result = await res.json();
 
     if (result.status === 'LoginSuccess') {
@@ -36,14 +39,26 @@ export default function App() {
 
   const handleDraw = async () => {
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
-    const url = `${BACKEND_URL}?email=${email}&character=${characterName}`;
-    const res = await fetch(url);
+    const params = new URLSearchParams({
+      action: 'draw',
+      email,
+      character: characterName,
+    });
+
+    const res = await fetch(BACKEND_URL, {
+      method: 'POST',
+      body: params,
+    });
+
     const data = await res.json();
-    if (data === 'NotEnoughTokens') {
+
+    if (data.status === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
-    } else {
+    } else if (data.item) {
       setItem(data);
       setToken((prev) => prev - 1);
+    } else {
+      alert('เกิดข้อผิดพลาดในการสุ่ม');
     }
   };
 
