@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbw-cFWKCeksp0TxleINc1sxjyZuYAycTsXAxwU_k80-M9ArNUPzEnb63RaD_UPo1UXBMA/exec";
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbw-cFWKCeksp0TxleINc1sxjyZuYAycTsXAxwU_k80-M9ArNUPzEnb63RaD_UPo1UXBMA/exec';
 
 export default function App() {
   const [email, setEmail] = useState('');
@@ -19,16 +19,16 @@ export default function App() {
     const text = await res.text();
 
     try {
-      const json = JSON.parse(text);
-      if (json.status === 'LoginSuccess') {
+      const data = JSON.parse(text);
+      if (data.status === 'LoginSuccess') {
         setIsLoggedIn(true);
-        setToken(parseInt(json.token));
-        setView(json.role === 'admin' ? 'admin' : 'dashboard');
+        setView(data.role === 'admin' ? 'admin' : 'dashboard');
+        setToken(data.token);
       } else {
-        alert(json.status);
+        alert('เข้าสู่ระบบไม่สำเร็จ');
       }
-    } catch (e) {
-      alert(text);
+    } catch (err) {
+      alert(text); // เช่น 'InvalidCredentials'
     }
   };
 
