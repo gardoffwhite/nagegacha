@@ -140,3 +140,11 @@ export default function App() {
             onChange={(e) => setAdminTokens(Number(e.target.value))}
           />
           <button className="btn" onClick={handle
+          <button className="btn" onClick={handleAdminAddToken}>เติม Token</button>
+          <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
