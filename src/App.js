@@ -136,6 +136,27 @@ export default function App() {
           )}
 
           <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+
+          {/* แสดงตารางอัตราการสุ่มขวาบน */}
+          <div className="rates-container">
+            <h3>อัตราการสุ่มไอเท็ม</h3>
+            <table className="rates-table">
+              <thead>
+                <tr>
+                  <th>ไอเท็ม</th>
+                  <th>อัตรา (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(adminRates).map(([item, rate]) => (
+                  <tr key={item}>
+                    <td>{item}</td>
+                    <td>{rate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
