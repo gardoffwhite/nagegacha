@@ -28,7 +28,7 @@ export default function App() {
     setTimeout(() => {
       setItem({ item: result.item, character: characterName });
       setIsRolling(false);
-    }, 3000);
+    }, 5000);
   };
 
   return (
