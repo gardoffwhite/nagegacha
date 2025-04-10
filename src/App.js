@@ -2,11 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
-const ITEM_LIST = [
-  'ดาบเทพ', 'เกราะเหล็ก', 'หมวกนักรบ', 'ปีกปีศาจ',
-  'ยาเพิ่มพลัง', 'กล่องสุ่ม', 'โล่เวท', 'หอกสายฟ้า',
-  'รองเท้าเร็ว', 'แหวนเวทย์มนตร์'
-];
 
 export default function App() {
   const [username, setUsername] = useState('');
@@ -16,26 +11,16 @@ export default function App() {
   const [token, setToken] = useState(0);
   const [item, setItem] = useState(null);
   const [view, setView] = useState('login');
-  const [adminUser, setAdminUser] = useState('');
-  const [adminTokens, setAdminTokens] = useState(0);
-  const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState([]);
-  const [rate, setRate] = useState([
-    { item: 'ดาบเทพ', rate: '10%' },
-    { item: 'เกราะเหล็ก', rate: '15%' },
-    { item: 'หมวกนักรบ', rate: '20%' },
-    { item: 'ปีกปีศาจ', rate: '5%' },
-    { item: 'ยาเพิ่มพลัง', rate: '30%' },
-    { item: 'กล่องสุ่ม', rate: '10%' },
-    { item: 'โล่เวท', rate: '5%' },
-  ]);
+  const [isRolling, setIsRolling] = useState(false);
 
-  // ดึงประวัติการสุ่มล่าสุดจาก Backend
+  // ดึงประวัติการสุ่มจาก backend
   const fetchHistory = async () => {
     const url = `${BACKEND_URL}?action=gethistory`;
     const res = await fetch(url);
     const data = await res.json();
-    const recentHistory = data.history ? data.history.slice(-10).reverse() : []; // เก็บแค่ 10 แถวล่าสุดแล้ว reverse
+    // เก็บ 10 รายการล่าสุด
+    const recentHistory = data.history ? data.history.slice(-10).reverse() : []; 
     setHistory(recentHistory);
   };
 
@@ -54,15 +39,8 @@ export default function App() {
       setIsLoggedIn(true);
       setToken(result.token || 0);
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
-    } else if (result.status === 'Registered') {
-      alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
-      setView('login');
-    } else if (result.status === 'UsernameAlreadyExists') {
-      alert('ชื่อผู้ใช้นี้มีอยู่แล้ว');
-    } else if (result.status === 'InvalidCredentials') {
-      alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
     } else {
-      alert('เกิดข้อผิดพลาด: ' + result.status);
+      alert('ข้อมูลไม่ถูกต้อง');
     }
   };
 
@@ -105,17 +83,6 @@ export default function App() {
     }
   };
 
-  const handleAdminAddToken = async () => {
-    const params = new URLSearchParams({
-      action: 'addtoken',
-      username: adminUser,
-      token: adminTokens,
-    });
-    const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
-    const result = await res.json();
-    alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
-  };
-
   return (
     <div className="app-container">
       {view === 'login' && (
@@ -151,9 +118,10 @@ export default function App() {
             {isRolling && (
               <div className="rolling-container">
                 <div className="rolling-strip">
+                  {/* ส่วนนี้แสดงการเลื่อนของรายการสุ่ม */}
                   {Array(30).fill(null).map((_, i) => (
                     <div className="rolling-item" key={i}>
-                      {ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)]}
+                      ไอเท็ม {i+1}
                     </div>
                   ))}
                 </div>
@@ -187,27 +155,6 @@ export default function App() {
                     <td>{entry.character}</td>
                     <td>{entry.item}</td>
                     <td>{entry.time}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* ตารางเรทการสุ่ม */}
-          <div className="new-table-container">
-            <h3>ตารางใหม่</h3>
-            <table className="new-table">
-              <thead>
-                <tr>
-                  <th>ไอเท็ม</th>
-                  <th>อัตราการสุ่ม</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rate.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{entry.item}</td>
-                    <td>{entry.rate}</td>
                   </tr>
                 ))}
               </tbody>
