@@ -51,7 +51,7 @@
 }
 
 .scroll-inner {
-  animation: scrollItems 3s ease-in-out;
+  animation: scrollItems 5s ease-in-out;
 }
 
 .scroll-item {
