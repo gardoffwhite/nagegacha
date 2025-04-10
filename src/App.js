@@ -19,6 +19,13 @@ export default function App() {
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
+  const [drawHistory, setDrawHistory] = useState([]);
+  const [rateTable, setRateTable] = useState([
+    { item: 'ดาบเทพ', rate: 10 },
+    { item: 'เกราะเหล็ก', rate: 20 },
+    { item: 'หมวกนักรบ', rate: 30 },
+    { item: 'ปีกปีศาจ', rate: 40 },
+  ]);
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -61,7 +68,12 @@ export default function App() {
         setItem(data);
         setToken((prev) => prev - 1);
         setIsRolling(false);
-      }, 5000);
+
+        setDrawHistory((prev) => [
+          ...prev,
+          { character: characterName, item: data.item, timestamp: new Date().toLocaleString() }
+        ]);
+      }, 3000);
     }
   };
 
@@ -74,6 +86,12 @@ export default function App() {
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
     const result = await res.json();
     alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
+  };
+
+  const handleRateChange = (index, value) => {
+    const newRateTable = [...rateTable];
+    newRateTable[index].rate = value;
+    setRateTable(newRateTable);
   };
 
   return (
@@ -108,17 +126,56 @@ export default function App() {
             {isRolling ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
           </button>
 
-          {isRolling && (
-            <div className="rolling-container">
-              <div className="rolling-strip">
-                {Array(30).fill(null).map((_, i) => (
-                  <div className="rolling-item" key={i}>
-                    {ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)]}
-                  </div>
-                ))}
-              </div>
+          <div className="history-container">
+            <div className="history-table">
+              <h3>ประวัติการสุ่ม</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Character Name</th>
+                    <th>Item Received</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {drawHistory.map((entry, index) => (
+                    <tr key={index}>
+                      <td>{entry.timestamp}</td>
+                      <td>{entry.character}</td>
+                      <td>{entry.item}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
+
+            <div className="rate-table">
+              <h3>อัตราการสุ่ม</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Rate (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rateTable.map((rate, index) => (
+                    <tr key={index}>
+                      <td>{rate.item}</td>
+                      <td>
+                        <input 
+                          type="number" 
+                          value={rate.rate} 
+                          onChange={(e) => handleRateChange(index, e.target.value)} 
+                          min="0" max="100" 
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           {item && !isRolling && (
             <div className="item-display-card">
