@@ -1,59 +1,35 @@
-/* Global Styles */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f0f2f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 .app-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
   padding: 20px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-h2 {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
 }
 
-h3 {
-  font-size: 18px;
-  margin-top: 20px;
+.auth-container, .admin-container, .dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
-input[type="text"], input[type="password"], input[type="number"] {
-  width: 100%;
-  padding: 10px;
+.input-field {
   margin: 10px 0;
+  padding: 10px;
+  width: 250px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
-  border-color: #007bff;
-  outline: none;
+  border-radius: 6px;
+  font-size: 16px;
 }
 
 .btn {
-  width: 100%;
-  padding: 10px;
+  padding: 12px 25px;
+  margin-top: 10px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 .btn:hover {
@@ -61,11 +37,8 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:foc
 }
 
 .btn:disabled {
-  background-color: #ddd;
-}
-
-.auth-container, .dashboard-container, .admin-container, .history-container {
-  padding: 20px;
+  background-color: #aaa;
+  cursor: not-allowed;
 }
 
 .link {
@@ -73,107 +46,85 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:foc
   cursor: pointer;
 }
 
-.link:hover {
-  text-decoration: underline;
-}
-
 .token-display {
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-.rolling-container {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.rolling-strip {
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-  max-width: 100%;
-}
-
-.rolling-item {
-  font-size: 20px;
-  margin: 5px;
-  min-width: 100px;
-  animation: scrollItem 1s infinite linear;
-}
-
-@keyframes scrollItem {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100px); }
-}
-
-.item-display-card {
-  text-align: center;
-  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .item-name {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
-  color: #007bff;
+  margin-top: 20px;
 }
 
 .character-name {
+  margin-top: 5px;
   font-size: 18px;
   color: #555;
 }
 
-.table-container {
+.rolling-container {
+  overflow: hidden;
+  height: 60px;
+  width: 250px;
+  margin: 20px auto;
+  border: 2px solid #00c8ff;
+  border-radius: 8px;
+  background-color: #111;
+  position: relative;
+}
+
+.rolling-strip {
+  display: flex;
+  flex-direction: column;
+  animation: scrollItemsY 5s ease-in-out infinite;
+}
+
+.rolling-item {
+  padding: 10px;
+  height: 60px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #00eaff;
+  background: #222;
+  border-bottom: 1px solid #333;
+}
+
+@keyframes scrollItemsY {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+
+.item-display-card {
+  background: #f0f0f0;
+  border-radius: 10px;
+  padding: 15px 25px;
   margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
+/* เพิ่มการรองรับขนาดหน้าจอมือถือ */
+@media (max-width: 600px) {
+  .input-field, .btn {
+    width: 90%;
+    font-size: 14px;
+  }
 
-th, td {
-  padding: 12px;
-  text-align: center;
-  border: 1px solid #ddd;
-}
-
-th {
-  background-color: #f4f4f4;
-}
-
-td {
-  background-color: #fafafa;
-}
-
-th, td {
-  font-size: 16px;
-}
-
-input[type="number"] {
-  width: 60px;
-  text-align: center;
-}
-
-@media (max-width: 768px) {
-  .app-container {
+  .rolling-container {
     width: 90%;
   }
 
-  .token-display {
-    font-size: 16px;
+  .item-display-card {
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .item-name {
+    font-size: 18px;
   }
 
-  .btn {
-    font-size: 14px;
-  }
-
-  input[type="text"], input[type="password"], input[type="number"] {
-    font-size: 14px;
-  }
-
-  .rolling-item {
+  .character-name {
     font-size: 16px;
   }
 }
