@@ -174,26 +174,27 @@ export default function App() {
 
           {/* Left - History */}
           <div className="history-container">
-            <h3>ประวัติการสุ่ม</h3>
-            <table className="history-table">
-              <thead>
-                <tr>
-                  <th>ตัวละคร</th>
-                  <th>ไอเท็มที่ได้รับ</th>
-                  <th>เวลา</th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{entry.character}</td>
-                    <td>{entry.item}</td>
-                    <td>{entry.time}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+  <h3>ประวัติการสุ่ม</h3>
+  <table className="history-table">
+    <thead>
+      <tr>
+        <th>ตัวละคร</th>
+        <th>ไอเท็มที่ได้รับ</th>
+        <th>เวลา</th>
+      </tr>
+    </thead>
+    <tbody>
+      {history.map((entry, index) => (
+        <tr key={index}>
+          <td>{entry.character}</td>
+          <td>{entry.item}</td>
+          <td>{entry.time}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
 
           {/* Right - Rate */}
           <div className="rate-container">
