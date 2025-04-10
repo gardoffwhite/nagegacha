@@ -61,7 +61,7 @@ export default function App() {
         setItem(data);
         setToken((prev) => prev - 1);
         setIsRolling(false);
-      }, 3000);
+      }, 5000);
     }
   };
 
