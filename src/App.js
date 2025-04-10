@@ -19,7 +19,8 @@ export default function App() {
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
-  const [rate] = useState([
+  const [history, setHistory] = useState([]);
+  const [rate, setRate] = useState([
     { item: 'ดาบเทพ', rate: '10%' },
     { item: 'เกราะเหล็ก', rate: '15%' },
     { item: 'หมวกนักรบ', rate: '20%' },
@@ -28,18 +29,20 @@ export default function App() {
     { item: 'กล่องสุ่ม', rate: '10%' },
     { item: 'โล่เวท', rate: '5%' },
   ]);
-  const [history, setHistory] = useState([]);
 
-  // ดึงประวัติการสุ่มจาก backend
+  // ดึงประวัติการสุ่มล่าสุดจาก Backend
+  const fetchHistory = async () => {
+    const url = `${BACKEND_URL}?action=gethistory`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const recentHistory = data.history ? data.history.slice(-20).reverse() : []; // เก็บแค่ 20 แถวล่าสุดแล้ว reverse
+    setHistory(recentHistory);
+  };
+
+  // ดึงประวัติการสุ่มเมื่อผู้ใช้ล็อกอิน
   useEffect(() => {
-    const fetchHistory = async () => {
-      const res = await fetch(`${BACKEND_URL}?action=getHistory`);
-      const data = await res.json();
-      setHistory(data);
-    };
-
     if (isLoggedIn) {
-      fetchHistory();
+      fetchHistory();  // ดึงประวัติเมื่อผู้ใช้ล็อกอินสำเร็จ
     }
   }, [isLoggedIn]);
 
@@ -83,6 +86,21 @@ export default function App() {
       setTimeout(() => {
         setItem(data);
         setToken((prev) => prev - 1);
+
+        // เพิ่มข้อมูลการสุ่มใหม่ลงในประวัติ
+        const newEntry = {
+          character: data.character,
+          item: data.item,
+          time: new Date().toLocaleString(),
+        };
+
+        // อัพเดตประวัติการสุ่ม
+        setHistory((prevHistory) => {
+          const updatedHistory = [...prevHistory, newEntry];
+          return updatedHistory.slice(-20); // เก็บแค่ 20 แถวล่าสุด
+        });
+
+        fetchHistory(); // รีเฟรชประวัติการสุ่ม
         setIsRolling(false);
       }, 5000);
     }
@@ -153,22 +171,23 @@ export default function App() {
             <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
           </div>
 
+          {/* Left - History */}
           <div className="history-container">
             <h3>ประวัติการสุ่ม</h3>
             <table className="history-table">
               <thead>
                 <tr>
-                  <th>เวลา</th>
                   <th>ตัวละคร</th>
                   <th>ไอเท็มที่ได้รับ</th>
+                  <th>เวลา</th>
                 </tr>
               </thead>
               <tbody>
                 {history.map((entry, index) => (
                   <tr key={index}>
-                    <td>{new Date(entry.timestamp).toLocaleString()}</td>
-                    <td>{entry.characterName}</td>
-                    <td>{entry.itemReceived}</td>
+                    <td>{entry.character}</td>
+                    <td>{entry.item}</td>
+                    <td>{entry.time}</td>
                   </tr>
                 ))}
               </tbody>
