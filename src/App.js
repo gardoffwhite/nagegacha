@@ -30,7 +30,7 @@ export default function App() {
     'รองเท้าเร็ว': 5,
     'แหวนเวทย์มนตร์': 10
   });
-  const [isRolling, setIsRolling] = useState(false); // Added this line
+  const [isRolling, setIsRolling] = useState(false);
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
