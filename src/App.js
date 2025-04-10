@@ -30,7 +30,6 @@ export default function App() {
     'รองเท้าเร็ว': 5,
     'แหวนเวทย์มนตร์': 10
   });
-  const [isRolling, setIsRolling] = useState(false);
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -57,20 +56,15 @@ export default function App() {
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
 
-    if (isRolling) return; // Prevent another draw while rolling
-
-    setIsRolling(true);
     setItem(null);
 
-    // Instead of randomizing, use admin set rates
     const randomItem = ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)];
     const rate = adminRates[randomItem];
-    
+
     // Simulate delay for showing result
     setTimeout(() => {
       setItem({ item: randomItem, character: characterName });
       setToken((prev) => prev - 1);
-      setIsRolling(false);
     }, 5000);
   };
 
@@ -112,34 +106,12 @@ export default function App() {
           <h2>🎮 N-age Warzone Gacha!!</h2>
           <div className="token-display">Token คงเหลือ: {token}</div>
           <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-          <button className="btn btn-gacha" onClick={handleDraw} disabled={isRolling}>
-            {isRolling ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
+          <button className="btn btn-gacha" onClick={handleDraw} disabled={token <= 0}>
+            สุ่มไอเท็ม 🔮
           </button>
 
-          {isRolling && (
-            <div className="rolling-container">
-              <div className="rolling-strip">
-                {Array(30).fill(null).map((_, i) => (
-                  <div className="rolling-item" key={i}>
-                    {ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)]}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {item && !isRolling && (
-            <div className="item-display-card">
-              <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
-              <div className="character-name">ตัวละคร: {item.character}</div>
-            </div>
-          )}
-
-          <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
-
-          {/* แสดงตารางอัตราการสุ่มขวาบน */}
           <div className="rates-container">
-            <h3>อัตราการสุ่มไอเท็ม</h3>
+            <h3>อัตราการสุ่ม</h3>
             <table className="rates-table">
               <thead>
                 <tr>
@@ -157,6 +129,15 @@ export default function App() {
               </tbody>
             </table>
           </div>
+
+          {item && (
+            <div className="item-display-card">
+              <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
+              <div className="character-name">ตัวละคร: {item.character}</div>
+            </div>
+          )}
+
+          <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
         </div>
       )}
 
