@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -28,6 +28,20 @@ export default function App() {
     { item: 'กล่องสุ่ม', rate: '10%' },
     { item: 'โล่เวท', rate: '5%' },
   ]);
+  const [history, setHistory] = useState([]);
+
+  // ดึงประวัติการสุ่มจาก backend
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const res = await fetch(`${BACKEND_URL}?action=getHistory`);
+      const data = await res.json();
+      setHistory(data);
+    };
+
+    if (isLoggedIn) {
+      fetchHistory();
+    }
+  }, [isLoggedIn]);
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -137,6 +151,28 @@ export default function App() {
             )}
 
             <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+          </div>
+
+          <div className="history-container">
+            <h3>ประวัติการสุ่ม</h3>
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>เวลา</th>
+                  <th>ตัวละคร</th>
+                  <th>ไอเท็มที่ได้รับ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{new Date(entry.timestamp).toLocaleString()}</td>
+                    <td>{entry.characterName}</td>
+                    <td>{entry.itemReceived}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           {/* Right - Rate */}
