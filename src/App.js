@@ -30,20 +30,7 @@ export default function App() {
     { item: 'โล่เวท', rate: '5%' },
   ]);
 
-  // ดึงประวัติการสุ่มล่าสุดจาก Backend
-  const fetchHistory = async () => {
-    const url = `${BACKEND_URL}?action=gethistory`;
-    const res = await fetch(url);
-    const data = await res.json();
-    const recentHistory = data.history ? data.history.slice(-20).reverse() : []; // เก็บแค่ 20 แถวล่าสุดแล้ว reverse
-    setHistory(recentHistory);
-  };
-
-  // ดึงประวัติการสุ่มเมื่อผู้ใช้ล็อกอิน
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchHistory();  // ดึงประวัติเมื่อผู้ใช้ล็อกอินสำเร็จ
-    }
+ 
   }, [isLoggedIn]);
 
   const handleAuth = async (action) => {
