@@ -31,13 +31,14 @@ export default function App() {
   ]);
 
   // ดึงประวัติการสุ่มล่าสุดจาก Backend
-  const fetchHistory = async () => {
-    const url = `${BACKEND_URL}?action=gethistory`;
-    const res = await fetch(url);
-    const data = await res.json();
-    const recentHistory = data.history ? data.history.slice(-20).reverse() : []; // เก็บแค่ 20 แถวล่าสุดแล้ว reverse
-    setHistory(recentHistory);
-  };
+ const fetchHistory = async () => {
+  const url = `${BACKEND_URL}?action=gethistory`;
+  const res = await fetch(url);
+  const data = await res.json();
+  const recentHistory = data.history ? data.history.slice(-10).reverse() : []; // เก็บแค่ 10 แถวล่าสุดแล้ว reverse
+  setHistory(recentHistory);
+};
+
 
   // ดึงประวัติการสุ่มเมื่อผู้ใช้ล็อกอิน
   useEffect(() => {
