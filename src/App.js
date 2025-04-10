@@ -216,6 +216,17 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {view === 'admin' && (
+        <div className="container">
+          <div className="dashboard-container">
+            <h3>จัดการ Token ของผู้ใช้</h3>
+            <input className="input-field" placeholder="ชื่อผู้ใช้" value={adminUser} onChange={(e) => setAdminUser(e.target.value)} />
+            <input className="input-field" type="number" placeholder="จำนวน Token" value={adminTokens} onChange={(e) => setAdminTokens(e.target.value)} />
+            <button className="btn btn-gacha" onClick={handleAdminAddToken}>เพิ่ม Token</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
