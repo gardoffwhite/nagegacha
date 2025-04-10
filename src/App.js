@@ -160,6 +160,7 @@ export default function App() {
               <thead>
                 <tr>
                   <th>ตัวละคร</th>
+                  <th>ไอเท็มที่ได้รับ</th>
                   <th>เวลา</th>
                 </tr>
               </thead>
@@ -167,6 +168,7 @@ export default function App() {
                 {history.map((entry, index) => (
                   <tr key={index}>
                     <td>{entry.character}</td>
+                    <td>{entry.item}</td> {/* แสดงไอเท็มที่ได้รับ */}
                     <td>{entry.time}</td> {/* แสดงเวลา */}
                   </tr>
                 ))}
