@@ -106,7 +106,7 @@
 .rates-container {
   margin-top: 30px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #222; /* เปลี่ยนพื้นหลังเป็นสีเข้ม */
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
@@ -119,16 +119,17 @@
 .rates-table th, .rates-table td {
   padding: 10px;
   text-align: center;
-  border: 1px solid #ddd;
+  border: 1px solid #444; /* สีขอบตารางเข้มขึ้น */
 }
 
 .rates-table th {
-  background-color: #007bff;
-  color: white;
+  background-color: #444; /* พื้นหลังของหัวตาราง */
+  color: #00eaff; /* ตัวอักษรของหัวตารางเป็นสีฟ้า */
 }
 
 .rates-table td {
-  background-color: #f8f8f8;
+  background-color: #444; /* พื้นหลังของข้อมูลในตาราง */
+  color: #00eaff; /* ตัวอักษรของข้อมูลในตารางเป็นสีฟ้า */
 }
 
 @media (max-width: 600px) {
@@ -165,3 +166,4 @@
     font-size: 16px;
   }
 }
+
