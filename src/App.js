@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';  // นำเข้าไฟล์ CSS
+import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
 
@@ -38,7 +38,7 @@ export default function App() {
   const handleDraw = async () => {
     if (token <= 0) {
       alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
-      return; // หาก token เป็น 0 หรือ ติดลบ จะไม่ให้สุ่ม
+      return;
     }
 
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
@@ -50,7 +50,7 @@ export default function App() {
       alert('Token ไม่พอ!');
     } else {
       setItem(data);
-      setToken((prev) => prev - 1); // ลด Token หลังจากสุ่ม
+      setToken((prev) => prev - 1);
     }
   };
 
@@ -68,7 +68,7 @@ export default function App() {
   return (
     <div className="app-container">
       {view === 'login' && (
-        <div className="auth-container">
+        <div className="auth-card">
           <h2>เข้าสู่ระบบ</h2>
           <input
             className="input-field"
@@ -84,14 +84,12 @@ export default function App() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className="btn" onClick={() => handleAuth('login')}>เข้าสู่ระบบ</button>
-          <p>
-            ยังไม่มีบัญชี? <span className="link" onClick={() => setView('register')}>สมัครสมาชิก</span>
-          </p>
+          <p>ยังไม่มีบัญชี? <span className="link" onClick={() => setView('register')}>สมัครสมาชิก</span></p>
         </div>
       )}
 
       {view === 'register' && (
-        <div className="auth-container">
+        <div className="auth-card">
           <h2>สมัครสมาชิก</h2>
           <input
             className="input-field"
@@ -107,34 +105,40 @@ export default function App() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className="btn" onClick={() => handleAuth('register')}>สมัครสมาชิก</button>
-          <p>
-            มีบัญชีอยู่แล้ว? <span className="link" onClick={() => setView('login')}>เข้าสู่ระบบ</span>
-          </p>
+          <p>มีบัญชีอยู่แล้ว? <span className="link" onClick={() => setView('login')}>เข้าสู่ระบบ</span></p>
         </div>
       )}
 
       {view === 'dashboard' && (
-        <div className="dashboard-container">
-          <h2>🎮 N-age Warzone Gacha!!</h2>
-          <p>Token คงเหลือ: {token}</p>
+        <div className="dashboard-card">
+          <h2>🎮 N-age Gacha Zone</h2>
+          <p className="token-display">🪙 Token คงเหลือ: <strong>{token}</strong></p>
+
           <input
             className="input-field"
             placeholder="ชื่อตัวละครของคุณ"
             value={characterName}
             onChange={(e) => setCharacterName(e.target.value)}
           />
-          <button className="btn" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
+
+          <button className="btn btn-gacha" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
+
           {item && (
-            <p className={`item-name ${item ? 'stop-animation' : ''}`}>
-              🎁 คุณได้รับ: {item.item} ตัวละคร {item.character}
-            </p>
+            <div className="item-display-card">
+              <h3>🎁 คุณได้รับ:</h3>
+              <p className="item-name">{item.item}</p>
+              <p className="character-name">🧙‍♂️ ตัวละคร: {item.character}</p>
+            </div>
           )}
-          <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+
+          <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>
+            ออกจากระบบ
+          </button>
         </div>
       )}
 
       {view === 'admin' && (
-        <div className="admin-container">
+        <div className="admin-card">
           <h2>🛠️ แอดมิน - เติม Token</h2>
           <input
             className="input-field"
@@ -149,8 +153,8 @@ export default function App() {
             value={adminTokens}
             onChange={(e) => setAdminTokens(Number(e.target.value))}
           />
-          <button className="btn" onClick={handleAdminAddToken}>เติม Token</button>
-          <button className="btn" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+          <button className="btn btn-admin" onClick={handleAdminAddToken}>เติม Token</button>
+          <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
         </div>
       )}
     </div>
