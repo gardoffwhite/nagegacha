@@ -42,77 +42,73 @@
 }
 
 .history-table th, .rate-table th {
-  background-color: #f0f0f0;
+  background-color: #f4f4f4;
 }
 
-.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.token-display {
-  margin-bottom: 10px;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.btn {
-  background-color: #00c8ff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+input, button {
   margin: 10px 0;
-}
-
-.btn-gacha {
-  background-color: #ff7a00;
-}
-
-.btn-logout {
-  background-color: #e60000;
-}
-
-.btn:hover {
-  background-color: #0088cc;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
 }
 
 .input-field {
-  padding: 10px;
-  margin-bottom: 10px;
   width: 80%;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.btn-logout {
+  background-color: #f44336;
+}
+
+.btn-logout:hover {
+  background-color: #e53935;
+}
+
+.item-display-card {
+  margin-top: 20px;
+  background-color: #eeeeee;
+  padding: 10px;
   border-radius: 8px;
-  border: 1px solid #ddd;
+}
+
+.token-display {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .rolling-container {
+  margin-top: 20px;
+  height: 50px;
   overflow: hidden;
-  height: 60px;
-  width: 250px;
-  margin: 20px auto;
-  border: 2px solid #00c8ff;
-  border-radius: 8px;
-  background-color: #111;
   position: relative;
 }
 
 .rolling-strip {
   display: flex;
-  flex-direction: column;
-  animation: scrollItemsY 5s ease-in-out infinite;
+  animation: roll 5s linear infinite;
 }
 
 .rolling-item {
-  padding: 10px;
-  height: 60px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #00eaff;
-  background: #222;
-  border-bottom: 1px solid #333;
+  padding: 0 15px;
+  font-size: 20px;
+  line-height: 50px;
+  min-width: 150px;
+  text-align: center;
 }
 
-@keyframes scrollItemsY {
+@keyframes roll {
   0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+  100% { transform: translateY(-1000px); }
 }
