@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -29,6 +29,18 @@ export default function App() {
     { item: 'กล่องสุ่ม', rate: '10%' },
     { item: 'โล่เวท', rate: '5%' },
   ]);
+
+  // ดึงประวัติการสุ่มจาก backend
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const url = `${BACKEND_URL}?action=gethistory`;
+      const res = await fetch(url);
+      const data = await res.json();
+      setHistory(data);
+    };
+
+    fetchHistory();
+  }, []);
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -149,6 +161,7 @@ export default function App() {
                 <tr>
                   <th>ตัวละคร</th>
                   <th>ไอเท็มที่ได้รับ</th>
+                  <th>เวลา</th>
                 </tr>
               </thead>
               <tbody>
@@ -156,6 +169,7 @@ export default function App() {
                   <tr key={index}>
                     <td>{entry.character}</td>
                     <td>{entry.item}</td>
+                    <td>{new Date(entry.timestamp).toLocaleString()}</td> {/* แสดงเวลา */}
                   </tr>
                 ))}
               </tbody>
