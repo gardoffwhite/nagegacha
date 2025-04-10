@@ -30,6 +30,7 @@ export default function App() {
     'รองเท้าเร็ว': 5,
     'แหวนเวทย์มนตร์': 10
   });
+  const [isRolling, setIsRolling] = useState(false); // Added this line
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -55,8 +56,8 @@ export default function App() {
   const handleDraw = async () => {
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
-    // Check for rolling state
-    if (isRolling) return;
+
+    if (isRolling) return; // Prevent another draw while rolling
 
     setIsRolling(true);
     setItem(null);
@@ -64,6 +65,7 @@ export default function App() {
     // Instead of randomizing, use admin set rates
     const randomItem = ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)];
     const rate = adminRates[randomItem];
+    
     // Simulate delay for showing result
     setTimeout(() => {
       setItem({ item: randomItem, character: characterName });
