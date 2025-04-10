@@ -31,16 +31,14 @@ export default function App() {
   ]);
 
   // ดึงประวัติการสุ่มล่าสุดจาก Backend
- const fetchHistory = async () => {
-  const url = `${BACKEND_URL}?action=gethistory`;
-  const res = await fetch(url);
-  const data = await res.json();
-  const recentHistory = data.history ? data.history.slice(-10).reverse() : []; // เก็บแค่ 10 แถวล่าสุดแล้ว reverse
-  setHistory(recentHistory);
-};
+  const fetchHistory = async () => {
+    const url = `${BACKEND_URL}?action=gethistory`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const recentHistory = data.history ? data.history.slice(-10).reverse() : []; // เก็บแค่ 10 แถวล่าสุดแล้ว reverse
+    setHistory(recentHistory);
+  };
 
-
-  // ดึงประวัติการสุ่มเมื่อผู้ใช้ล็อกอิน
   useEffect(() => {
     if (isLoggedIn) {
       fetchHistory();  // ดึงประวัติเมื่อผู้ใช้ล็อกอินสำเร็จ
@@ -172,38 +170,37 @@ export default function App() {
             <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
           </div>
 
-          {/* Left - History */}
+          {/* ประวัติการสุ่ม */}
           <div className="history-container">
-  <h3>ประวัติการสุ่ม</h3>
-  <table className="history-table">
-    <thead>
-      <tr>
-        <th>ตัวละคร</th>
-        <th>ไอเท็มที่ได้รับ</th>
-        <th>เวลา</th>
-      </tr>
-    </thead>
-    <tbody>
-      {history.map((entry, index) => (
-        <tr key={index}>
-          <td>{entry.character}</td>
-          <td>{entry.item}</td>
-          <td>{entry.time}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+            <h3>ประวัติการสุ่ม</h3>
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>ตัวละคร</th>
+                  <th>ไอเท็มที่ได้รับ</th>
+                  <th>เวลา</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.character}</td>
+                    <td>{entry.item}</td>
+                    <td>{entry.time}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-
-          {/* Right - Rate */}
-          <div className="rate-container">
-            <h3>เรทการสุ่ม</h3>
-            <table className="rate-table">
+          {/* ตารางเรทการสุ่ม */}
+          <div className="new-table-container">
+            <h3>ตารางใหม่</h3>
+            <table className="new-table">
               <thead>
                 <tr>
                   <th>ไอเท็ม</th>
-                  <th>เรท</th>
+                  <th>อัตราการสุ่ม</th>
                 </tr>
               </thead>
               <tbody>
