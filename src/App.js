@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -19,13 +19,23 @@ export default function App() {
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
-  const [drawHistory, setDrawHistory] = useState([]);
-  const [rateTable, setRateTable] = useState([
-    { item: 'ดาบเทพ', rate: 10 },
-    { item: 'เกราะเหล็ก', rate: 20 },
-    { item: 'หมวกนักรบ', rate: 30 },
-    { item: 'ปีกปีศาจ', rate: 40 },
-  ]);
+  const [history, setHistory] = useState([]);
+  const [itemRates, setItemRates] = useState(ITEM_LIST.reduce((acc, item) => {
+    acc[item] = 10; // Default 10% drop rate for each item
+    return acc;
+  }, {}));
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchHistory();
+    }
+  }, [isLoggedIn]);
+
+  const fetchHistory = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=fetchHistory`);
+    const data = await res.json();
+    setHistory(data); // Assuming the backend returns an array of history records
+  };
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -69,12 +79,21 @@ export default function App() {
         setToken((prev) => prev - 1);
         setIsRolling(false);
 
-        setDrawHistory((prev) => [
-          ...prev,
-          { character: characterName, item: data.item, timestamp: new Date().toLocaleString() }
-        ]);
-      }, 3000);
+        // Save the draw history
+        saveHistory(data);
+      }, 5000);
     }
+  };
+
+  const saveHistory = async (data) => {
+    const params = new URLSearchParams({
+      action: 'saveHistory',
+      characterName: data.character,
+      itemReceived: data.item,
+      timestamp: new Date().toISOString(),
+    });
+    await fetch(BACKEND_URL, { method: 'POST', body: params });
+    fetchHistory(); // Update the history after saving
   };
 
   const handleAdminAddToken = async () => {
@@ -88,10 +107,11 @@ export default function App() {
     alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
   };
 
-  const handleRateChange = (index, value) => {
-    const newRateTable = [...rateTable];
-    newRateTable[index].rate = value;
-    setRateTable(newRateTable);
+  const handleRateChange = (item, rate) => {
+    setItemRates(prevRates => ({
+      ...prevRates,
+      [item]: rate,
+    }));
   };
 
   return (
@@ -106,16 +126,6 @@ export default function App() {
         </div>
       )}
 
-      {view === 'register' && (
-        <div className="auth-container">
-          <h2>สมัครสมาชิก</h2>
-          <input className="input-field" placeholder="ชื่อผู้ใช้" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input className="input-field" placeholder="รหัสผ่าน" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button className="btn" onClick={() => handleAuth('register')}>สมัครสมาชิก</button>
-          <p>มีบัญชีอยู่แล้ว? <span className="link" onClick={() => setView('login')}>เข้าสู่ระบบ</span></p>
-        </div>
-      )}
-
       {view === 'dashboard' && (
         <div className="dashboard-container">
           <h2>🎮 N-age Warzone Gacha!!</h2>
@@ -126,56 +136,17 @@ export default function App() {
             {isRolling ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
           </button>
 
-          <div className="history-container">
-            <div className="history-table">
-              <h3>ประวัติการสุ่ม</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Timestamp</th>
-                    <th>Character Name</th>
-                    <th>Item Received</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {drawHistory.map((entry, index) => (
-                    <tr key={index}>
-                      <td>{entry.timestamp}</td>
-                      <td>{entry.character}</td>
-                      <td>{entry.item}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {isRolling && (
+            <div className="rolling-container">
+              <div className="rolling-strip">
+                {Array(30).fill(null).map((_, i) => (
+                  <div className="rolling-item" key={i}>
+                    {ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)]}
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <div className="rate-table">
-              <h3>อัตราการสุ่ม</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Item</th>
-                    <th>Rate (%)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rateTable.map((rate, index) => (
-                    <tr key={index}>
-                      <td>{rate.item}</td>
-                      <td>
-                        <input 
-                          type="number" 
-                          value={rate.rate} 
-                          onChange={(e) => handleRateChange(index, e.target.value)} 
-                          min="0" max="100" 
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          )}
 
           {item && !isRolling && (
             <div className="item-display-card">
@@ -194,7 +165,65 @@ export default function App() {
           <input className="input-field" placeholder="ชื่อผู้ใช้" value={adminUser} onChange={(e) => setAdminUser(e.target.value)} />
           <input className="input-field" placeholder="จำนวน Token" type="number" value={adminTokens} onChange={(e) => setAdminTokens(Number(e.target.value))} />
           <button className="btn" onClick={handleAdminAddToken}>เติม Token</button>
+
+          <h3>การตั้งค่าอัตราการสุ่ม</h3>
+          <div>
+            {ITEM_LIST.map(item => (
+              <div key={item}>
+                <label>{item}:</label>
+                <input 
+                  type="number" 
+                  value={itemRates[item]} 
+                  onChange={(e) => handleRateChange(item, e.target.value)} 
+                  min="0" max="100"
+                />
+              </div>
+            ))}
+          </div>
+
+          <h3>อัตราการสุ่มไอเท็ม</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ไอเท็ม</th>
+                <th>อัตราการสุ่ม (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ITEM_LIST.map(item => (
+                <tr key={item}>
+                  <td>{item}</td>
+                  <td>{itemRates[item]}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
           <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+        </div>
+      )}
+
+      {view === 'history' && (
+        <div className="history-container">
+          <h2>ประวัติการสุ่ม</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>ตัวละคร</th>
+                <th>ไอเท็มที่ได้รับ</th>
+                <th>เวลา</th>
+              </tr>
+            </thead>
+            <tbody>
+              {history.map((record, index) => (
+                <tr key={index}>
+                  <td>{record.character}</td>
+                  <td>{record.item}</td>
+                  <td>{new Date(record.timestamp).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
