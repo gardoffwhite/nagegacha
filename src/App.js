@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -9,16 +9,26 @@ const ITEM_LIST = [
 ];
 
 export default function App() {
-  const [username, setUsername] = useState(localStorage.getItem('username') || '');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [characterName, setCharacterName] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
-  const [token, setToken] = useState(Number(localStorage.getItem('token')) || 0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState(0);
   const [item, setItem] = useState(null);
-  const [view, setView] = useState(localStorage.getItem('view') || 'login');
+  const [view, setView] = useState('login');
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [rate, setRate] = useState([
+    { item: 'ดาบเทพ', rate: '10%' },
+    { item: 'เกราะเหล็ก', rate: '15%' },
+    { item: 'หมวกนักรบ', rate: '20%' },
+    { item: 'ปีกปีศาจ', rate: '5%' },
+    { item: 'ยาเพิ่มพลัง', rate: '30%' },
+    { item: 'กล่องสุ่ม', rate: '10%' },
+    { item: 'โล่เวท', rate: '5%' },
+  ]);
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -29,10 +39,6 @@ export default function App() {
       setIsLoggedIn(true);
       setToken(result.token || 0);
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('username', username);
-      localStorage.setItem('token', result.token || 0);
-      localStorage.setItem('view', result.role === 'admin' ? 'admin' : 'dashboard');
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -64,7 +70,7 @@ export default function App() {
       setTimeout(() => {
         setItem(data);
         setToken((prev) => prev - 1);
-        localStorage.setItem('token', token - 1);  // Update token in localStorage
+        setHistory((prevHistory) => [...prevHistory, data]); // Add to history
         setIsRolling(false);
       }, 5000);
     }
@@ -79,12 +85,6 @@ export default function App() {
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
     const result = await res.json();
     alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setView('login');
-    localStorage.clear();  // Clear all localStorage data
   };
 
   return (
@@ -110,45 +110,78 @@ export default function App() {
       )}
 
       {view === 'dashboard' && (
-        <div className="dashboard-container">
-          <h2>🎮 N-age Warzone Gacha!!</h2>
-          <div className="token-display">Token คงเหลือ: {token}</div>
+        <div className="container">
+          <div className="dashboard-container">
+            <h2>🎮 N-age Warzone Gacha!!</h2>
+            <div className="token-display">Token คงเหลือ: {token}</div>
+            <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
+            <button className="btn btn-gacha" onClick={handleDraw} disabled={isRolling}>
+              {isRolling ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
+            </button>
 
-          <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-          <button className="btn btn-gacha" onClick={handleDraw} disabled={isRolling}>
-            {isRolling ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
-          </button>
-
-          {isRolling && (
-            <div className="rolling-container">
-              <div className="rolling-strip">
-                {Array(30).fill(null).map((_, i) => (
-                  <div className="rolling-item" key={i}>
-                    {ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)]}
-                  </div>
-                ))}
+            {isRolling && (
+              <div className="rolling-container">
+                <div className="rolling-strip">
+                  {Array(30).fill(null).map((_, i) => (
+                    <div className="rolling-item" key={i}>
+                      {ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)]}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {item && !isRolling && (
-            <div className="item-display-card">
-              <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
-              <div className="character-name">ตัวละคร: {item.character}</div>
-            </div>
-          )}
+            {item && !isRolling && (
+              <div className="item-display-card">
+                <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
+                <div className="character-name">ตัวละคร: {item.character}</div>
+              </div>
+            )}
+            
+            <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+          </div>
 
-          <button className="btn btn-logout" onClick={handleLogout}>ออกจากระบบ</button>
-        </div>
-      )}
+          {/* Left - History */}
+          <div className="history-container">
+            <h3>ประวัติการสุ่ม</h3>
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>ตัวละคร</th>
+                  <th>ไอเท็มที่ได้รับ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.character}</td>
+                    <td>{entry.item}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      {view === 'admin' && (
-        <div className="admin-container">
-          <h2>🛠️ แอดมิน - เติม Token</h2>
-          <input className="input-field" placeholder="ชื่อผู้ใช้" value={adminUser} onChange={(e) => setAdminUser(e.target.value)} />
-          <input className="input-field" placeholder="จำนวน Token" type="number" value={adminTokens} onChange={(e) => setAdminTokens(Number(e.target.value))} />
-          <button className="btn" onClick={handleAdminAddToken}>เติม Token</button>
-          <button className="btn btn-logout" onClick={handleLogout}>ออกจากระบบ</button>
+          {/* Right - Rate */}
+          <div className="rate-container">
+            <h3>เรทการสุ่ม</h3>
+            <table className="rate-table">
+              <thead>
+                <tr>
+                  <th>ไอเท็ม</th>
+                  <th>เรท</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rate.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.item}</td>
+                    <td>{entry.rate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
