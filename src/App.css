@@ -17,9 +17,7 @@
   margin-top: 20px;
 }
 
-.dashboard-container,
-.history-container,
-.rate-container {
+.dashboard-container, .history-container, .rate-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,30 +28,24 @@
   width: 30%;
 }
 
-.history-table,
-.rate-table {
+.history-table, .rate-table {
   margin-top: 20px;
   width: 100%;
   border-collapse: collapse;
 }
 
-.history-table th,
-.history-table td,
-.rate-table th,
-.rate-table td {
+.history-table th, .history-table td, .rate-table th, .rate-table td {
   padding: 10px;
   border: 1px solid #ddd;
   text-align: center;
   font-size: 14px;
 }
 
-.history-table th,
-.rate-table th {
+.history-table th, .rate-table th {
   background-color: #f0f0f0;
 }
 
-.history-table tr:nth-child(even),
-.rate-table tr:nth-child(even) {
+.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
@@ -121,15 +113,11 @@
 }
 
 @keyframes scrollItemsY {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100%);
-  }
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
 }
 
-/* Updated History Container Style */
+/* New Styles for History */
 .history-container {
   width: 60%;
   padding: 20px;
@@ -184,15 +172,18 @@
   transition: background-color 0.2s ease;
 }
 
+/* Add some spacing for history container */
+.history-container {
+  margin-top: 20px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
   }
 
-  .dashboard-container,
-  .history-container,
-  .rate-container {
+  .dashboard-container, .history-container, .rate-container {
     width: 100%;
     margin-bottom: 20px;
   }
