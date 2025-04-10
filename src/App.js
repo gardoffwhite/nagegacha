@@ -30,6 +30,7 @@ export default function App() {
     { item: 'โล่เวท', rate: '5%' },
   ]);
 
+  // ดึงประวัติการสุ่มล่าสุดจาก Backend
   const fetchHistory = async () => {
     const url = `${BACKEND_URL}?action=gethistory`;
     const res = await fetch(url);
@@ -38,6 +39,7 @@ export default function App() {
     setHistory(recentHistory);
   };
 
+  // ดึงประวัติการสุ่มเมื่อผู้ใช้ล็อกอิน
   useEffect(() => {
     if (isLoggedIn) {
       fetchHistory();  // ดึงประวัติเมื่อผู้ใช้ล็อกอินสำเร็จ
@@ -98,6 +100,7 @@ export default function App() {
           return updatedHistory.slice(-20); // เก็บแค่ 20 แถวล่าสุด
         });
 
+        fetchHistory(); // รีเฟรชประวัติการสุ่ม
         setIsRolling(false);
       }, 5000);
     }
@@ -164,7 +167,7 @@ export default function App() {
                 <div className="character-name">ตัวละคร: {item.character}</div>
               </div>
             )}
-            
+
             <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
           </div>
 
