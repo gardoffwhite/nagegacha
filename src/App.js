@@ -39,8 +39,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    fetchHistory();  // ดึงประวัติเมื่อ Component ถูกโหลด
-  }, []);
+    if (isLoggedIn) {
+      fetchHistory();  // ดึงประวัติเมื่อผู้ใช้ล็อกอินสำเร็จ
+    }
+  }, [isLoggedIn]);
 
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
@@ -82,7 +84,20 @@ export default function App() {
       setTimeout(() => {
         setItem(data);
         setToken((prev) => prev - 1);
-        setHistory((prevHistory) => [...prevHistory, { ...data, time: new Date().toLocaleString() }]); // Add to history with time
+
+        // เพิ่มข้อมูลการสุ่มใหม่ลงในประวัติ
+        const newEntry = {
+          character: data.character,
+          item: data.item,
+          time: new Date().toLocaleString(),
+        };
+
+        // อัพเดตประวัติการสุ่ม
+        setHistory((prevHistory) => {
+          const updatedHistory = [...prevHistory, newEntry];
+          return updatedHistory.slice(-20); // เก็บแค่ 20 แถวล่าสุด
+        });
+
         setIsRolling(false);
       }, 5000);
     }
@@ -168,8 +183,8 @@ export default function App() {
                 {history.map((entry, index) => (
                   <tr key={index}>
                     <td>{entry.character}</td>
-                    <td>{entry.item}</td> {/* แสดงไอเท็มที่ได้รับ */}
-                    <td>{entry.time}</td> {/* แสดงเวลา */}
+                    <td>{entry.item}</td>
+                    <td>{entry.time}</td>
                   </tr>
                 ))}
               </tbody>
