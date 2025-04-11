@@ -208,15 +208,30 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {rate.map((entry, index) => (
+                {rate.map((rateData, index) => (
                   <tr key={index}>
-                    <td>{entry.item}</td>
-                    <td>{entry.rate}</td>
+                    <td>{rateData.item}</td>
+                    <td>{rateData.rate}%</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {view === 'admin' && (
+        <div className="admin-container">
+          <h2>ระบบผู้ดูแล</h2>
+          <div className="admin-input">
+            <label>ชื่อผู้ใช้:</label>
+            <input type="text" value={adminUser} onChange={(e) => setAdminUser(e.target.value)} />
+          </div>
+          <div className="admin-input">
+            <label>จำนวน Token ที่ต้องการเพิ่ม:</label>
+            <input type="number" value={adminTokens} onChange={(e) => setAdminTokens(e.target.value)} />
+          </div>
+          <button className="btn" onClick={handleAdminAddToken}>เพิ่ม Token</button>
         </div>
       )}
     </div>
