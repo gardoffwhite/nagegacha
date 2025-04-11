@@ -26,6 +26,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 30%;
+  margin: 0 10px; /* ให้มีระยะห่างระหว่างคอนเทนเนอร์ */
 }
 
 .history-table, .rate-table {
@@ -117,8 +118,9 @@
   100% { transform: translateY(-100%); }
 }
 
+/* New Styles for History */
 .history-container {
-  width: 60%;
+  width: 60%; /* เพิ่มความกว้างสำหรับ History */
   padding: 20px;
   margin-top: 20px;
   background-color: #f9f9f9;
@@ -171,6 +173,7 @@
   transition: background-color 0.2s ease;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
