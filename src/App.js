@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; 
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
-const ITEM_LIST = [
-  'ดาบเทพ', 'เกราะเหล็ก', 'หมวกนักรบ', 'ปีกปีศาจ',
-  'ยาเพิ่มพลัง', 'กล่องสุ่ม', 'โล่เวท', 'หอกสายฟ้า',
-  'รองเท้าเร็ว', 'แหวนเวทย์มนตร์'
-];
 
 export default function App() {
   const [username, setUsername] = useState('');
@@ -128,9 +123,10 @@ export default function App() {
             {isRolling && (
               <div className="rolling-container">
                 <div className="rolling-strip">
-                  {Array(30).fill(null).map((_, i) => (
-                    <div className="rolling-item" key={i}>
-                      {ITEM_LIST[Math.floor(Math.random() * ITEM_LIST.length)]}
+                  {/* ขณะกำลังสุ่ม จะทำการแสดงรายการไอเท็มแบบสุ่มจาก backend */}
+                  {rate.map((entry, index) => (
+                    <div className="rolling-item" key={index}>
+                      {entry.item}
                     </div>
                   ))}
                 </div>
