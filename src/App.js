@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -117,7 +117,6 @@ export default function App() {
 
       {view === 'dashboard' && (
         <div className="container">
-          {/* กล่องสุ่มไอเท็ม */}
           <div className="dashboard-container">
             <h2>🎮 N-age Warzone Gacha!!</h2>
             <div className="token-display">Token คงเหลือ: {token}</div>
@@ -148,7 +147,7 @@ export default function App() {
             <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
           </div>
 
-          {/* ประวัติการสุ่ม */}
+          {/* Left - History */}
           <div className="history-container">
             <h3>ประวัติการสุ่ม</h3>
             <table className="history-table">
@@ -171,7 +170,7 @@ export default function App() {
             </table>
           </div>
 
-          {/* ตารางเรท */}
+          {/* Right - Rate */}
           <div className="rate-container">
             <h3>เรทการสุ่ม</h3>
             <table className="rate-table">
