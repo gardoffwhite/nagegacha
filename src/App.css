@@ -107,6 +107,7 @@
   display: flex;
   flex-direction: column;
   animation: scrollItemsY 30s ease-in-out infinite;
+  overflow: hidden; /* ซ่อนส่วนที่เลื่อนออกมานอกกรอบ */
 }
 
 .rolling-item {
@@ -117,12 +118,22 @@
   color: #ff0000; /* สีตัวอักษรในระบบสุ่ม: สีแดง */
   background: #707679;
   border-bottom: 1px solid #333;
+  opacity: 0; /* เริ่มต้นที่โปร่งใส */
+  animation: fadeIn 30s ease-in-out infinite; /* ทำให้ข้อความค่อยๆ ปรากฏ */
 }
 
 @keyframes scrollItemsY {
   0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+  100% { transform: translateY(-1000%); }
 }
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  10% { opacity: 1; } /* ทำให้ข้อความค่อยๆ ปรากฏ */
+  90% { opacity: 1; }
+  100% { opacity: 0; } /* ค่อยๆ เลือนหายไป */
+}
+
 
 .history-container {
   width: 60%;
