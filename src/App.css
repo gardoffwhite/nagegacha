@@ -1,4 +1,3 @@
-/* Global Styles */
 .app-container {
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
@@ -10,7 +9,6 @@
   align-items: center;
 }
 
-/* Container Layout */
 .container {
   display: flex;
   justify-content: space-between;
@@ -30,7 +28,6 @@
   width: 30%;
 }
 
-/* History Table */
 .history-table, .rate-table {
   margin-top: 20px;
   width: 100%;
@@ -58,10 +55,9 @@
   font-size: 18px;
 }
 
-/* Button Styles */
 .btn {
   background-color: #00c8ff;
-  color: white; /* สีตัวอักษรในปุ่ม: ขาว */
+  color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -81,7 +77,6 @@
   background-color: #0088cc;
 }
 
-/* Input Field Styles */
 .input-field {
   padding: 10px;
   margin-bottom: 10px;
@@ -90,7 +85,6 @@
   border: 1px solid #ddd;
 }
 
-/* Rolling Slot Machine */
 .rolling-container {
   overflow: hidden;
   height: 60px;
@@ -113,7 +107,7 @@
   height: 60px;
   font-size: 18px;
   font-weight: bold;
-  color: #ff0000; /* สีตัวอักษรในระบบสุ่ม: สีฟ้า */
+  color: #ff0000;
   background: #707679;
   border-bottom: 1px solid #333;
 }
@@ -123,22 +117,6 @@
   100% { transform: translateY(-100%); }
 }
 
-/* Display Item Name and Character */
-.item-display-card {
-  margin-top: 20px;
-  font-size: 18px;
-}
-
-.item-name, .character-name {
-  margin: 10px 0;
-  font-weight: bold;
-}
-
-.item-name span, .character-name span {
-  color: #ff7a00; /* สีที่ใช้กับข้อความที่ได้รับ */
-}
-
-/* New Styles for History */
 .history-container {
   width: 60%;
   padding: 20px;
@@ -156,8 +134,8 @@
 }
 
 .history-table th {
-  background-color: #007BFF; /* สีพื้นหลังหัวข้อในตาราง: สีน้ำเงิน */
-  color: rgb(0, 0, 0); /* สีตัวอักษรในหัวข้อ: ขาว */
+  background-color: #007BFF;
+  color: rgb(0, 0, 0);
 }
 
 .history-table td {
@@ -182,7 +160,7 @@
 .history-table th,
 .history-table td {
   font-size: 16px;
-  color: #333; /* สีตัวอักษรในตาราง: เทาเข้ม */
+  color: #333;
 }
 
 .history-table td {
@@ -193,12 +171,6 @@
   transition: background-color 0.2s ease;
 }
 
-/* Add some spacing for history container */
-.history-container {
-  margin-top: 20px;
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
