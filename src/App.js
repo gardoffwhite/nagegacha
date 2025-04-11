@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -17,8 +17,6 @@ export default function App() {
   const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([]);
   const [itemList, setItemList] = useState([]); // State to store item list
-  const [rollingItems, setRollingItems] = useState([]); // รายการที่แสดงระหว่างหมุน
-  const [finalItemIndex, setFinalItemIndex] = useState(0); // index ของไอเท็มที่ได้จริง
 
   // Fetch history
   const fetchHistory = async () => {
@@ -73,58 +71,22 @@ export default function App() {
     setIsRolling(true);
     setItem(null);
 
-    // ดึงผลการสุ่มจริงจาก backend ก่อน
+    // Call the backend to get the drawn item
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
 
-    if (data.status === 'NotEnoughTokens') {
+    if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
       setIsRolling(false);
-      return;
+    } else {
+      setTimeout(() => {
+        setItem(data); // Set the item returned from the backend
+        setToken((prev) => prev - 1);
+        setIsRolling(false);
+        fetchHistory(); // Reload history after draw
+      }, 5000);
     }
-
-    // หาตำแหน่งของไอเท็มที่สุ่มได้ใน itemList
-    const itemIndex = itemList.findIndex((i) => i.item === data.item);
-    const fallbackIndex = Math.floor(Math.random() * itemList.length);
-    const targetIndex = itemIndex >= 0 ? itemIndex : fallbackIndex;
-
-    // สร้างรายการที่แสดงเลื่อนแนวตั้ง โดยมีไอเท็มที่ได้จริงซ่อนอยู่ท้ายสุด
-    const cycles = 30;
-    const fullList = [];
-
-    for (let i = 0; i < cycles; i++) {
-      fullList.push(itemList[Math.floor(Math.random() * itemList.length)]);
-    }
-
-    // ปิดท้ายด้วยไอเท็มที่สุ่มได้จริง เพื่อให้เลื่อนมาหยุดตรงนี้
-    fullList.push(itemList[targetIndex]);
-    setRollingItems(fullList);
-    setFinalItemIndex(cycles);
-
-    // เริ่มหมุนสล็อต
-    const spinDuration = 5000; // ระยะเวลาในการหมุน (5 วินาที)
-    const spinInterval = 100; // ความเร็วในการหมุน
-    let spinCount = spinDuration / spinInterval;
-
-    const interval = setInterval(() => {
-      const updatedRollingItems = rollingItems.map(() => itemList[Math.floor(Math.random() * itemList.length)]);
-      setRollingItems(updatedRollingItems); // อัปเดตรายการที่หมุน
-      spinCount--;
-
-      if (spinCount <= 0) {
-        clearInterval(interval); // หยุดการหมุนเมื่อครบเวลา
-        handleFinishDraw(); // เมื่อการหมุนเสร็จ ให้แสดงผลไอเท็ม
-      }
-    }, spinInterval);
-
-    // ฟังก์ชันที่จะทำเมื่อการหมุนเสร็จ
-    const handleFinishDraw = async () => {
-      setItem(data); // ตั้งค่าไอเท็มที่สุ่มได้จาก backend
-      setToken((prev) => prev - 1);
-      fetchHistory(); // โหลดประวัติการสุ่มใหม่
-      setIsRolling(false);
-    };
   };
 
   const handleAdminAddToken = async () => {
@@ -164,19 +126,75 @@ export default function App() {
         <div className="container">
           <div className="dashboard-container">
             <h2>🎮 N-age Warzone Gacha!!</h2>
-            {/* Gacha slot animation container */}
-            <div className="rolling-container">
-              <div className="rolling-strip">
-                {rollingItems.map((item, index) => (
-                  <div key={index} className="rolling-item">
-                    <img src={item.image} alt={item.item} />
-                    <p>{item.item}</p>
-                  </div>
-                ))}
+            <div className="token-display">Token คงเหลือ: {token}</div>
+            <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
+            <button className="btn btn-gacha" onClick={handleDraw} disabled={isRolling}>
+              {isRolling ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
+            </button>
+
+            {isRolling && (
+              <div className="rolling-container">
+                <div className="rolling-strip">
+                  {Array(30).fill(null).map((_, i) => (
+                    <div className="rolling-item" key={i}>
+                      {itemList[Math.floor(Math.random() * itemList.length)]} {/* Use the itemList from backend */}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-            <button className="btn" onClick={handleDraw} disabled={isRolling}>สุ่ม</button>
-            <p>Token: {token}</p>
+            )}
+
+            {item && !isRolling && (
+              <div className="item-display-card">
+                <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
+                <div className="character-name">ตัวละคร: {item.character}</div>
+              </div>
+            )}
+
+            <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+          </div>
+
+          <div className="history-container">
+            <h3>ประวัติการสุ่ม</h3>
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>ตัวละคร</th>
+                  <th>ไอเท็มที่ได้รับ</th>
+                  <th>เวลา</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.character}</td>
+                    <td>{entry.item}</td>
+                    <td>{entry.timestamp}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Rate Table - closed the table tag here */}
+          <div className="rate-container">
+            <h3>เรทการสุ่ม</h3>
+            <table className="rate-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rate.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.item}</td>
+                    <td>{entry.rate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
