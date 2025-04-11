@@ -1,4 +1,96 @@
-/* Add CSS for rolling animation */
+.app-container {
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  text-align: center;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black; /* เปลี่ยนสีตัวอักษรทั้งหมดให้เป็นสีดำ */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+}
+
+.dashboard-container, .history-container, .rate-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  color: black; /* สีตัวอักษรในส่วนนี้ */
+}
+
+.history-table, .rate-table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  color: black; /* สีตัวอักษรในตาราง */
+}
+
+.history-table th, .history-table td, .rate-table th, .rate-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+  color: black; /* สีตัวอักษรในตาราง */
+}
+
+.history-table th, .rate-table th {
+  background-color: #f0f0f0;
+}
+
+.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.token-display {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  color: black; /* เปลี่ยนสีตัวอักษรของ token */
+}
+
+.btn {
+  background-color: #00c8ff;
+  color: white; /* สีตัวอักษรในปุ่ม: ขาว */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.btn-gacha {
+  background-color: #ff7a00;
+}
+
+.btn-logout {
+  background-color: #e60000;
+}
+
+.btn:hover {
+  background-color: #0088cc;
+}
+
+.input-field {
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 80%;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  color: black; /* สีตัวอักษรใน input */
+}
+
 .rolling-container {
   overflow: hidden;
   height: 60px;
@@ -13,7 +105,7 @@
 .rolling-strip {
   display: flex;
   flex-direction: column;
-  transition: transform 1s ease-in-out; /* การทำให้การเลื่อนหยุดที่ตำแหน่งสุดท้าย */
+  animation: scrollItemsY 5s ease-in-out infinite;
 }
 
 .rolling-item {
@@ -26,78 +118,36 @@
   border-bottom: 1px solid #333;
 }
 
-/* เพิ่มการเลื่อนเมื่อหมุน */
 @keyframes scrollItemsY {
   0% { transform: translateY(0); }
-  100% { transform: translateY(-500%); }
+  100% { transform: translateY(-100%); }
 }
 
-/* เมื่อการหมุนหยุดที่ไอเท็มที่สุ่มได้ */
-.rolling-strip.stop {
-  transform: translateY(-60px); /* เปลี่ยนค่าให้ตรงกับตำแหน่งที่หยุด */
-}
-
-.item-display-card {
-  background-color: #fffbf0;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.history-container {
+  width: 60%;
+  padding: 20px;
   margin-top: 20px;
-  width: 80%;
-  text-align: center;
-  animation: pulse 1s ease-in-out infinite; /* เพิ่มแอนิเมชันเพื่อเพิ่มความตื่นเต้น */
-  transition: transform 0.3s ease-in-out;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  color: black; /* สีตัวอักษรใน History */
 }
 
-.item-display-card:hover {
-  transform: scale(1.05); /* เพิ่มเอฟเฟกต์ขยายขณะ hover */
+.history-table {
+  margin-top: 10px;
+  width: 100%;
 }
 
-.item-name {
-  font-size: 26px;
-  font-weight: bold;
-  color: #ff5733; /* สีส้มสดใส */
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงาให้ตัวอักษรดูเด่น */
-  margin-bottom: 15px;
+.history-table th {
+  background-color: #007BFF; /* สีพื้นหลังหัวข้อในตาราง: สีน้ำเงิน */
+  color: black; /* สีตัวอักษรในหัวข้อ: ดำ */
 }
 
-.character-name {
-  font-size: 18px;
-  color: #2c3e50; /* สีเทาเข้ม */
-  font-weight: 500;
-  margin-top: 15px;
-  animation: fadeIn 2s ease-in-out;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-/* สำหรับปุ่มสุ่ม (gacha) */
-.btn-gacha {
-  background-color: #ff7a00;
-}
-
-.btn-logout {
-  background-color: #e60000;
-}
-
-.btn:hover {
-  background-color: #0088cc;
-}
-
-.history-table td, .history-table th {
-  padding: 8px;
-  text-align: center;
-  font-size: 16px;
-  color: black;
+.history-table td {
+  font-size: 14px;
+  font-weight: normal;
 }
 
 .history-table tr:nth-child(even) {
@@ -108,34 +158,29 @@
   background-color: #f0f0f0;
 }
 
-.history-table td {
-  font-size: 14px;
+.history-table td,
+.history-table th {
+  padding: 8px;
+  text-align: center;
 }
 
-.history-table th {
-  background-color: #007BFF; /* สีพื้นหลังหัวข้อในตาราง: สีน้ำเงิน */
-  color: black; /* สีตัวอักษรในหัวข้อ: ดำ */
+.history-table th,
+.history-table td {
+  font-size: 16px;
+  color: black; /* สีตัวอักษรในตาราง: ดำ */
+}
+
+.history-table td {
+  font-size: 14px;
 }
 
 .history-table tr {
   transition: background-color 0.2s ease;
 }
 
-/* เพิ่มบางส่วนเพื่อปรับให้เข้ากับสไตล์ที่มีอยู่ */
-.token-display {
-  margin-bottom: 10px;
-  font-weight: bold;
-  font-size: 18px;
-  color: black; /* เปลี่ยนสีตัวอักษรของ token */
-}
-
-.input-field {
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 80%;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  color: black; /* สีตัวอักษรใน input */
+/* Add some spacing for history container */
+.history-container {
+  margin-top: 20px;
 }
 
 /* Responsive Design */
