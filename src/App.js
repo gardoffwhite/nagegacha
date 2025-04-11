@@ -176,7 +176,28 @@ export default function App() {
             </table>
           </div>
 
+          {/* Rate Table - closed the table tag here */}
           <div className="rate-container">
             <h3>เรทการสุ่ม</h3>
             <table className="rate-table">
               <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rate.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.item}</td>
+                    <td>{entry.rate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
