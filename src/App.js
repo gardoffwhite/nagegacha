@@ -19,6 +19,7 @@ export default function App() {
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
+  const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([
     { item: 'ดาบเทพ', rate: '10%' },
     { item: 'เกราะเหล็ก', rate: '15%' },
@@ -29,6 +30,12 @@ export default function App() {
     { item: 'โล่เวท', rate: '5%' },
   ]);
 
+  const fetchHistory = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=gethistory`);
+    const data = await res.json();
+    setHistory(data.slice(0, 20));
+  };
+
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
@@ -38,6 +45,7 @@ export default function App() {
       setIsLoggedIn(true);
       setToken(result.token || 0);
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
+      fetchHistory();
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -70,6 +78,7 @@ export default function App() {
         setItem(data);
         setToken((prev) => prev - 1);
         setIsRolling(false);
+        fetchHistory(); // โหลดประวัติใหม่หลังสุ่ม
       }, 5000);
     }
   };
@@ -139,7 +148,7 @@ export default function App() {
             <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
           </div>
 
-          {/* Left - History (Layout Only) */}
+          {/* Left - History */}
           <div className="history-container">
             <h3>ประวัติการสุ่ม</h3>
             <table className="history-table">
@@ -151,17 +160,13 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {/* ตัวอย่างข้อมูล */}
-                <tr>
-                  <td>Player1</td>
-                  <td>ดาบเทพ</td>
-                  <td>2025-04-11 14:30</td>
-                </tr>
-                <tr>
-                  <td>Player2</td>
-                  <td>โล่เวท</td>
-                  <td>2025-04-11 14:31</td>
-                </tr>
+                {history.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.character}</td>
+                    <td>{entry.item}</td>
+                    <td>{entry.timestamp}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
