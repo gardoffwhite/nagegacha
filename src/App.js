@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -78,7 +78,7 @@ export default function App() {
     const res = await fetch(url);
     const data = await res.json();
 
-    if (data === 'NotEnoughTokens') {
+    if (data.status === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
       setIsRolling(false);
       return;
