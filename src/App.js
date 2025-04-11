@@ -164,4 +164,22 @@ export default function App() {
         <div className="container">
           <div className="dashboard-container">
             <h2>🎮 N-age Warzone Gacha!!</h2>
-            <div
+            {/* Gacha slot animation container */}
+            <div className="rolling-container">
+              <div className="rolling-strip">
+                {rollingItems.map((item, index) => (
+                  <div key={index} className="rolling-item">
+                    <img src={item.image} alt={item.item} />
+                    <p>{item.item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button className="btn" onClick={handleDraw} disabled={isRolling}>สุ่ม</button>
+            <p>Token: {token}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
