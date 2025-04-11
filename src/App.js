@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -17,24 +16,27 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([]);
-  const [itemList, setItemList] = useState([]);
+  const [itemList, setItemList] = useState([]); // State to store item list
 
+  // Fetch history
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
     const data = await res.json();
     setHistory(data.slice(0, 20));
   };
 
+  // Fetch item list from backend
+  const fetchItemList = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=itemlist`);
+    const data = await res.json();
+    setItemList(data); // Store item list from backend
+  };
+
+  // Fetch rates
   const fetchRate = async () => {
     const res = await fetch(`${BACKEND_URL}?action=getrate`);
     const data = await res.json();
     setRate(data);
-  };
-
-  const fetchItemList = async () => {
-    const res = await fetch(`${BACKEND_URL}?action=itemlist`);
-    const data = await res.json();
-    setItemList(data);
   };
 
   const handleAuth = async (action) => {
@@ -48,7 +50,7 @@ export default function App() {
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
       fetchHistory();
       fetchRate();
-      fetchItemList();
+      fetchItemList(); // Fetch item list after login
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -65,26 +67,48 @@ export default function App() {
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
     if (isRolling) return;
-    if (itemList.length === 0) return alert('ยังไม่ได้โหลดรายการไอเท็ม!');
 
     setIsRolling(true);
     setItem(null);
 
-    const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    // เริ่มหมุนสล็อต
+    const spinDuration = 5000; // ระยะเวลาในการหมุน (5 วินาที)
+    const spinInterval = 100; // ความเร็วในการหมุน
+    let spinCount = spinDuration / spinInterval;
 
-    if (data === 'NotEnoughTokens') {
-      alert('Token ไม่พอ!');
-      setIsRolling(false);
-    } else {
-      setTimeout(() => {
-        setItem(data);
-        setToken((prev) => prev - 1);
-        setIsRolling(false);
-        fetchHistory();
-      }, 5000);
-    }
+    // สร้าง array สำหรับแสดงไอเท็ม
+    let rollingItems = Array(30).fill(null).map(() => itemList[Math.floor(Math.random() * itemList.length)]);
+
+    setItemList(rollingItems); // ใช้รายการที่สุ่มขึ้นมาแสดงในขณะหมุน
+
+    const interval = setInterval(() => {
+        rollingItems = rollingItems.map(() => itemList[Math.floor(Math.random() * itemList.length)]);
+        setItemList(rollingItems); // อัปเดตรายการที่หมุน
+        spinCount--;
+
+        if (spinCount <= 0) {
+            clearInterval(interval); // หยุดการหมุนเมื่อครบเวลา
+            handleFinishDraw(); // เมื่อการหมุนเสร็จ ให้แสดงผลไอเท็ม
+        }
+    }, spinInterval);
+
+    // ฟังก์ชันที่จะทำเมื่อการหมุนเสร็จ
+    const handleFinishDraw = async () => {
+        // ดึงไอเท็มที่สุ่มได้จาก backend
+        const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data === 'NotEnoughTokens') {
+            alert('Token ไม่พอ!');
+            setIsRolling(false);
+        } else {
+            setItem(data); // ตั้งค่าไอเท็มที่สุ่มได้จาก backend
+            setToken((prev) => prev - 1);
+            fetchHistory(); // โหลดประวัติการสุ่มใหม่
+            setIsRolling(false);
+        }
+    };
   };
 
   const handleAdminAddToken = async () => {
@@ -135,7 +159,7 @@ export default function App() {
                 <div className="rolling-strip">
                   {Array(30).fill(null).map((_, i) => (
                     <div className="rolling-item" key={i}>
-                      {itemList[Math.floor(Math.random() * itemList.length)]}
+                      {itemList[Math.floor(Math.random() * itemList.length)]?.item} {/* Use the itemList from backend */}
                     </div>
                   ))}
                 </div>
@@ -168,6 +192,26 @@ export default function App() {
                     <td>{entry.character}</td>
                     <td>{entry.item}</td>
                     <td>{entry.timestamp}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="rate-container">
+            <h3>เรทการสุ่ม</h3>
+            <table className="rate-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rate.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.item}</td>
+                    <td>{entry.rate}</td>
                   </tr>
                 ))}
               </tbody>
