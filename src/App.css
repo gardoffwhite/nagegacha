@@ -193,4 +193,47 @@
     width: 100%;
     margin-bottom: 20px;
   }
+}.item-display-card {
+  background-color: #fffbf0;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  width: 80%;
+  text-align: center;
+  animation: pulse 1s ease-in-out infinite; /* เพิ่มแอนิเมชันเพื่อเพิ่มความตื่นเต้น */
+  transition: transform 0.3s ease-in-out;
 }
+
+.item-display-card:hover {
+  transform: scale(1.05); /* เพิ่มเอฟเฟกต์ขยายขณะ hover */
+}
+
+.item-name {
+  font-size: 26px;
+  font-weight: bold;
+  color: #ff5733; /* สีส้มสดใส */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงาให้ตัวอักษรดูเด่น */
+  margin-bottom: 15px;
+}
+
+.character-name {
+  font-size: 18px;
+  color: #2c3e50; /* สีเทาเข้ม */
+  font-weight: 500;
+  margin-top: 15px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+
