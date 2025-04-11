@@ -190,4 +190,22 @@
     width: 100%;
     margin-bottom: 20px;
   }
+
+  .history-table td,
+  .history-table th {
+    font-size: 12px;
+  }
+
+  .rolling-container {
+    width: 200px;
+    height: 50px;
+  }
+
+  .btn, .btn-gacha, .btn-logout {
+    width: 100%;
+  }
+
+  .input-field {
+    width: 90%;
+  }
 }
