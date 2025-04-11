@@ -108,11 +108,11 @@
   flex-direction: column;
   overflow: hidden;
   transform: translateY(0);
-  transition: transform 4s cubic-bezier(0.0, 0.0, 0.2, 1); /* เพิ่ม cubic-bezier */
+  transition: transform 100s cubic-bezier(0.0, 0.0, 0.2, 1); /* เพิ่ม cubic-bezier */
 }
 
 .rolling-strip.animate {
-  animation: scrollToItem 4s cubic-bezier(0.0, 0.0, 0.2, 1) forwards; /* เพิ่ม cubic-bezier */
+  animation: scrollToItem 100s cubic-bezier(0.0, 0.0, 0.2, 1) forwards; /* เพิ่ม cubic-bezier */
 }
 
 
