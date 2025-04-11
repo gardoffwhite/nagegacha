@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -16,6 +17,7 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([]);
+  const [itemList, setItemList] = useState([]);
 
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
@@ -29,6 +31,12 @@ export default function App() {
     setRate(data);
   };
 
+  const fetchItemList = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=itemlist`);
+    const data = await res.json();
+    setItemList(data);
+  };
+
   const handleAuth = async (action) => {
     const params = new URLSearchParams({ action, username, password });
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
@@ -39,7 +47,8 @@ export default function App() {
       setToken(result.token || 0);
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
       fetchHistory();
-      fetchRate(); // <-- โหลดเรทจาก backend
+      fetchRate();
+      fetchItemList();
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -56,22 +65,10 @@ export default function App() {
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
     if (isRolling) return;
+    if (itemList.length === 0) return alert('ยังไม่ได้โหลดรายการไอเท็ม!');
 
     setIsRolling(true);
     setItem(null);
-
-    // Random item based on the rates from the backend
-    const randomNum = Math.random();
-    let cumulativeRate = 0;
-    let selectedItem = null;
-
-    for (let i = 0; i < rate.length; i++) {
-      cumulativeRate += rate[i].rate;
-      if (randomNum <= cumulativeRate) {
-        selectedItem = rate[i];
-        break;
-      }
-    }
 
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
@@ -82,13 +79,10 @@ export default function App() {
       setIsRolling(false);
     } else {
       setTimeout(() => {
-        setItem({
-          item: selectedItem.item,
-          character: characterName,
-        });
+        setItem(data);
         setToken((prev) => prev - 1);
         setIsRolling(false);
-        fetchHistory(); // โหลดประวัติใหม่หลังสุ่ม
+        fetchHistory();
       }, 5000);
     }
   };
@@ -141,7 +135,7 @@ export default function App() {
                 <div className="rolling-strip">
                   {Array(30).fill(null).map((_, i) => (
                     <div className="rolling-item" key={i}>
-                      {rate[Math.floor(Math.random() * rate.length)].item}
+                      {itemList[Math.floor(Math.random() * itemList.length)]}
                     </div>
                   ))}
                 </div>
@@ -150,15 +144,14 @@ export default function App() {
 
             {item && !isRolling && (
               <div className="item-display-card">
-                <div className="item-name">🎁 คุณได้รับ: <span className="item-name">{item.item}</span></div>
-                <div className="character-name">ตัวละคร: <span className="character-name">{item.character}</span></div>
+                <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
+                <div className="character-name">ตัวละคร: {item.character}</div>
               </div>
             )}
 
             <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
           </div>
 
-          {/* Left - History */}
           <div className="history-container">
             <h3>ประวัติการสุ่ม</h3>
             <table className="history-table">
@@ -175,27 +168,6 @@ export default function App() {
                     <td>{entry.character}</td>
                     <td>{entry.item}</td>
                     <td>{entry.timestamp}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Right - Rate */}
-          <div className="rate-container">
-            <h3>เรทการสุ่ม</h3>
-            <table className="rate-table">
-              <thead>
-                <tr>
-                  <th>ไอเท็ม</th>
-                  <th>เรท</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rate.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{entry.item}</td>
-                    <td>{entry.rate}</td>
                   </tr>
                 ))}
               </tbody>
