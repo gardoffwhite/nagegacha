@@ -102,16 +102,7 @@
   position: relative;
 }
 
-/* แบบเลื่อนลูปเดิม */
-/*
-.rolling-strip {
-  display: flex;
-  flex-direction: column;
-  animation: scrollItemsY 30s ease-in-out infinite;
-  overflow: hidden;
-}
-*/
-
+/* Rolling Animation */
 .rolling-strip {
   display: flex;
   flex-direction: column;
@@ -134,14 +125,6 @@
   border-bottom: 1px solid #333;
   opacity: 1;
 }
-
-/* เดิมแบบเลื่อนวน */
-/*
-@keyframes scrollItemsY {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-1000%); }
-}
-*/
 
 @keyframes scrollToItem {
   0% {
