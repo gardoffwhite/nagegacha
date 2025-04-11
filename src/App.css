@@ -1,157 +1,211 @@
 /* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+.app-container {
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  text-align: center;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-body {
-  background-color: #f0f0f0;
-}
-
+/* Container Layout */
 .container {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
-}
-
-.dashboard-container {
-  width: 60%;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.history-container,
-.rate-container {
-  width: 30%;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h2, h3 {
-  font-size: 24px;
-  margin-bottom: 15px;
-}
-
-h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.btn {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn:hover {
-  background-color: #0056b3;
-}
-
-.input-field {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 16px;
+  max-width: 1200px;
+  margin-top: 20px;
 }
 
-.auth-container {
-  width: 300px;
-  background-color: #fff;
+.dashboard-container, .history-container, .rate-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 30%;
+}
+
+/* History Table */
+.history-table, .rate-table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history-table th, .history-table td, .rate-table th, .rate-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
   text-align: center;
+  font-size: 14px;
 }
 
-.auth-container input {
-  margin-bottom: 10px;
+.history-table th, .rate-table th {
+  background-color: #f0f0f0;
 }
 
-.link {
-  color: #007bff;
-  cursor: pointer;
+.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
 .token-display {
+  margin-bottom: 10px;
+  font-weight: bold;
   font-size: 18px;
-  margin-bottom: 20px;
+}
+
+/* Button Styles */
+.btn {
+  background-color: #00c8ff;
+  color: white; /* สีตัวอักษรในปุ่ม: ขาว */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px 0;
 }
 
 .btn-gacha {
-  background-color: #28a745;
+  background-color: #ff7a00;
 }
 
 .btn-logout {
-  background-color: #dc3545;
-  width: 100%;
+  background-color: #e60000;
 }
 
-.item-display-card {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.btn:hover {
+  background-color: #0088cc;
 }
 
-.item-name, .character-name {
-  font-size: 20px;
+/* Input Field Styles */
+.input-field {
+  padding: 10px;
   margin-bottom: 10px;
+  width: 80%;
+  border-radius: 8px;
+  border: 1px solid #ddd;
 }
 
+/* Rolling Slot Machine */
 .rolling-container {
-  position: relative;
-  height: 100px;
   overflow: hidden;
+  height: 60px;
+  width: 250px;
+  margin: 20px auto;
+  border: 2px solid #00c8ff;
+  border-radius: 8px;
+  background-color: #111;
+  position: relative;
 }
 
 .rolling-strip {
-  position: absolute;
-  top: 0;
-  left: 0;
-  animation: roll 3s linear infinite;
+  display: flex;
+  flex-direction: column;
+  animation: scrollItemsY 5s ease-in-out infinite;
 }
 
 .rolling-item {
   padding: 10px;
+  height: 60px;
   font-size: 18px;
-  text-align: center;
+  font-weight: bold;
+  color: #ff0000; /* สีตัวอักษรในระบบสุ่ม: สีฟ้า */
+  background: #707679;
+  border-bottom: 1px solid #333;
 }
 
-@keyframes roll {
-  0% { top: 0; }
-  100% { top: -100%; }
+@keyframes scrollItemsY {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
 }
 
-.history-table, .rate-table {
-  width: 100%;
-  border-collapse: collapse;
+/* Display Item Name and Character */
+.item-display-card {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.item-name, .character-name {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.item-name span, .character-name span {
+  color: #ff7a00; /* สีที่ใช้กับข้อความที่ได้รับ */
+}
+
+/* New Styles for History */
+.history-container {
+  width: 60%;
+  padding: 20px;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.history-table {
   margin-top: 10px;
+  width: 100%;
 }
 
-.history-table th, .rate-table th, .history-table td, .rate-table td {
-  padding: 10px;
+.history-table th {
+  background-color: #007BFF; /* สีพื้นหลังหัวข้อในตาราง: สีน้ำเงิน */
+  color: rgb(0, 0, 0); /* สีตัวอักษรในหัวข้อ: ขาว */
+}
+
+.history-table td {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.history-table tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+.history-table tr:hover {
+  background-color: #f0f0f0;
+}
+
+.history-table td,
+.history-table th {
+  padding: 8px;
   text-align: center;
-  border: 1px solid #ddd;
 }
 
-.history-table th, .rate-table th {
-  background-color: #f8f9fa;
+.history-table th,
+.history-table td {
+  font-size: 16px;
+  color: #333; /* สีตัวอักษรในตาราง: เทาเข้ม */
 }
 
-.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+.history-table td {
+  font-size: 14px;
+}
+
+.history-table tr {
+  transition: background-color 0.2s ease;
+}
+
+/* Add some spacing for history container */
+.history-container {
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .dashboard-container, .history-container, .rate-container {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 }
