@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -60,6 +60,19 @@ export default function App() {
     setIsRolling(true);
     setItem(null);
 
+    // Random item based on the rates from the backend
+    const randomNum = Math.random();
+    let cumulativeRate = 0;
+    let selectedItem = null;
+
+    for (let i = 0; i < rate.length; i++) {
+      cumulativeRate += rate[i].rate;
+      if (randomNum <= cumulativeRate) {
+        selectedItem = rate[i];
+        break;
+      }
+    }
+
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
@@ -69,7 +82,10 @@ export default function App() {
       setIsRolling(false);
     } else {
       setTimeout(() => {
-        setItem(data);
+        setItem({
+          item: selectedItem.item,
+          character: characterName,
+        });
         setToken((prev) => prev - 1);
         setIsRolling(false);
         fetchHistory(); // โหลดประวัติใหม่หลังสุ่ม
@@ -123,10 +139,9 @@ export default function App() {
             {isRolling && (
               <div className="rolling-container">
                 <div className="rolling-strip">
-                  {/* ขณะกำลังสุ่ม จะทำการแสดงรายการไอเท็มแบบสุ่มจาก backend */}
-                  {rate.map((entry, index) => (
-                    <div className="rolling-item" key={index}>
-                      {entry.item}
+                  {Array(30).fill(null).map((_, i) => (
+                    <div className="rolling-item" key={i}>
+                      {rate[Math.floor(Math.random() * rate.length)].item}
                     </div>
                   ))}
                 </div>
