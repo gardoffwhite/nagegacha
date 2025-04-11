@@ -28,8 +28,8 @@ export default function App() {
     setHistory(data.slice(0, 20));
   };
 
-  const fetchRates = async () => {
-    const res = await fetch(`${BACKEND_URL}?action=getrates`);
+  const fetchRate = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=getrate`);
     const data = await res.json();
     setRate(data);
   };
@@ -44,7 +44,7 @@ export default function App() {
       setToken(result.token || 0);
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
       fetchHistory();
-      fetchRates();
+      fetchRate(); // <-- โหลดเรทจาก backend
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -77,7 +77,7 @@ export default function App() {
         setItem(data);
         setToken((prev) => prev - 1);
         setIsRolling(false);
-        fetchHistory();
+        fetchHistory(); // โหลดประวัติใหม่หลังสุ่ม
       }, 5000);
     }
   };
