@@ -1,211 +1,166 @@
+/* App.css */
+
 .app-container {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
   padding: 20px;
-  text-align: center;
-  background-color: #121212; /* สีพื้นหลังหลัก: สีดำเข้ม */
-  color: #e0e0e0; /* สีตัวอักษร: สีเทาอ่อน */
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+}
+
+.auth-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .container {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  max-width: 1200px;
-  margin-top: 20px;
 }
 
-.dashboard-container, .history-container, .rate-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background-color: #1a1a1a; /* พื้นหลังของแต่ละกล่องเป็นสีเทาเข้ม */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 30%;
-}
-
-.history-table, .rate-table {
-  margin-top: 20px;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.history-table th, .history-table td, .rate-table th, .rate-table td {
-  padding: 10px;
-  border: 1px solid #333; /* กรอบตาราง: สีเทามืด */
-  text-align: center;
-  font-size: 14px;
-}
-
-.history-table th, .rate-table th {
-  background-color: #007BFF; /* สีพื้นหลังหัวข้อในตาราง: สีน้ำเงิน */
-  color: #fff; /* สีตัวอักษรในหัวข้อ: ขาว */
-}
-
-.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
-  background-color: #333; /* สีพื้นหลังแถวคู่ในตาราง: สีเทาเข้ม */
+.dashboard-container {
+  flex: 1;
+  margin-right: 20px;
 }
 
 .token-display {
-  margin-bottom: 10px;
-  font-weight: bold;
   font-size: 18px;
-  color: #00c8ff; /* สีตัวอักษรของ Token: สีฟ้า */
-}
-
-.btn {
-  background-color: #00c8ff;
-  color: white; /* สีตัวอักษรในปุ่ม: ขาว */
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 10px 0;
+  margin-bottom: 20px;
 }
 
 .btn-gacha {
-  background-color: #ff7a00; /* สีของปุ่มสุ่ม */
+  font-size: 18px;
+  padding: 15px;
+  background-color: #28a745;
+  border-radius: 4px;
+  width: 100%;
 }
 
-.btn-logout {
-  background-color: #e60000;
-}
-
-.btn:hover {
-  background-color: #0088cc;
-}
-
-.input-field {
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 80%;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+.btn-gacha:disabled {
+  background-color: #ccc;
 }
 
 .rolling-container {
-  overflow: hidden;
-  height: 60px;
-  width: 250px;
-  margin: 20px auto;
-  border: 2px solid #00c8ff;
-  border-radius: 8px;
-  background-color: #111;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .rolling-strip {
   display: flex;
-  flex-direction: column;
-  animation: scrollItemsY 5s ease-in-out infinite;
-}
-
-.rolling-item {
-  padding: 10px;
-  height: 60px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #ff0000; /* สีตัวอักษรในระบบสุ่ม: สีฟ้า */
-  background: #707679;
-  border-bottom: 1px solid #333;
-}
-
-@keyframes scrollItemsY {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
-}
-
-/* New Styles for History */
-.history-container {
-  width: 60%;
-  padding: 20px;
-  margin-top: 20px;
-  background-color: #222; /* สีพื้นหลังประวัติการสุ่ม */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-}
-
-.history-table {
-  margin-top: 10px;
+  overflow: hidden;
   width: 100%;
 }
 
-.history-table th {
-  background-color: #007BFF; /* สีพื้นหลังหัวข้อในตาราง: สีน้ำเงิน */
-  color: #fff; /* สีตัวอักษรในหัวข้อ: ขาว */
-}
-
-.history-table td {
-  font-size: 14px;
-  font-weight: normal;
-}
-
-.history-table tr:nth-child(even) {
-  background-color: #444; /* สีพื้นหลังแถวคู่ในตาราง: สีเทาเข้ม */
-}
-
-.history-table tr:hover {
-  background-color: #555; /* สีพื้นหลังแถวที่เอาเมาส์ไปชี้ */
-}
-
-.history-table td,
-.history-table th {
-  padding: 8px;
-  text-align: center;
-}
-
-.history-table th,
-.history-table td {
+.rolling-item {
   font-size: 16px;
-  color: #ddd; /* สีตัวอักษรในตาราง: สีเทาอ่อน */
+  padding: 10px;
+  background-color: #fff;
+  margin-right: 10px;
+  border-radius: 4px;
+  width: 120px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.history-table td {
-  font-size: 14px;
+.item-display-card {
+  margin-top: 20px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.history-table tr {
-  transition: background-color 0.2s ease;
+.item-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #28a745;
 }
 
-/* Add some spacing for history container */
-.history-container {
+.character-name {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #007bff;
+}
+
+.btn-logout {
+  background-color: #dc3545;
+  color: white;
   margin-top: 20px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
+.btn-logout:hover {
+  background-color: #c82333;
+}
 
-  .dashboard-container, .history-container, .rate-container {
-    width: 100%;
-    margin-bottom: 20px;
-  }
+.history-container, .rate-container {
+  flex: 1;
+  margin-left: 20px;
+}
 
-  .history-table td,
-  .history-table th {
-    font-size: 12px;
-  }
+.history-container h3, .rate-container h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
 
-  .rolling-container {
-    width: 200px;
-    height: 50px;
-  }
+.history-table, .rate-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
 
-  .btn, .btn-gacha, .btn-logout {
-    width: 100%;
-  }
+.history-table th, .rate-table th, .history-table td, .rate-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
 
-  .input-field {
-    width: 90%;
-  }
+.history-table th, .rate-table th {
+  background-color: #f8f9fa;
+}
+
+.history-table td, .rate-table td {
+  background-color: #fff;
+}
+
+.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
