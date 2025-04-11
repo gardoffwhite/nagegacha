@@ -106,7 +106,7 @@
 .rolling-strip {
   display: flex;
   flex-direction: column;
-  animation: scrollItemsY 5s ease-in-out infinite;
+  animation: scrollItemsY 30s ease-in-out infinite;
 }
 
 .rolling-item {
