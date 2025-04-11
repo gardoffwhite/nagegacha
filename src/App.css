@@ -13,7 +13,7 @@
 .rolling-strip {
   display: flex;
   flex-direction: column;
-  animation: scrollItemsY 5s ease-in-out infinite;
+  transition: transform 1s ease-in-out; /* การทำให้การเลื่อนหยุดที่ตำแหน่งสุดท้าย */
 }
 
 .rolling-item {
@@ -26,9 +26,15 @@
   border-bottom: 1px solid #333;
 }
 
+/* เพิ่มการเลื่อนเมื่อหมุน */
 @keyframes scrollItemsY {
   0% { transform: translateY(0); }
   100% { transform: translateY(-500%); }
+}
+
+/* เมื่อการหมุนหยุดที่ไอเท็มที่สุ่มได้ */
+.rolling-strip.stop {
+  transform: translateY(-60px); /* เปลี่ยนค่าให้ตรงกับตำแหน่งที่หยุด */
 }
 
 .item-display-card {
