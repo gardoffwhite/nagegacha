@@ -71,22 +71,44 @@ export default function App() {
     setIsRolling(true);
     setItem(null);
 
-    // Call the backend to get the drawn item
-    const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    // เริ่มหมุนสล็อต
+    const spinDuration = 5000; // ระยะเวลาในการหมุน (5 วินาที)
+    const spinInterval = 100; // ความเร็วในการหมุน
+    let spinCount = spinDuration / spinInterval;
 
-    if (data === 'NotEnoughTokens') {
-      alert('Token ไม่พอ!');
-      setIsRolling(false);
-    } else {
-      setTimeout(() => {
-        setItem(data); // Set the item returned from the backend
-        setToken((prev) => prev - 1);
-        setIsRolling(false);
-        fetchHistory(); // Reload history after draw
-      }, 5000);
-    }
+    // สร้าง array สำหรับแสดงไอเท็ม
+    let rollingItems = Array(30).fill(null).map(() => itemList[Math.floor(Math.random() * itemList.length)]);
+
+    setItemList(rollingItems); // ใช้รายการที่สุ่มขึ้นมาแสดงในขณะหมุน
+
+    const interval = setInterval(() => {
+        rollingItems = rollingItems.map(() => itemList[Math.floor(Math.random() * itemList.length)]);
+        setItemList(rollingItems); // อัปเดตรายการที่หมุน
+        spinCount--;
+
+        if (spinCount <= 0) {
+            clearInterval(interval); // หยุดการหมุนเมื่อครบเวลา
+            handleFinishDraw(); // เมื่อการหมุนเสร็จ ให้แสดงผลไอเท็ม
+        }
+    }, spinInterval);
+
+    // ฟังก์ชันที่จะทำเมื่อการหมุนเสร็จ
+    const handleFinishDraw = async () => {
+        // ดึงไอเท็มที่สุ่มได้จาก backend
+        const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data === 'NotEnoughTokens') {
+            alert('Token ไม่พอ!');
+            setIsRolling(false);
+        } else {
+            setItem(data); // ตั้งค่าไอเท็มที่สุ่มได้จาก backend
+            setToken((prev) => prev - 1);
+            fetchHistory(); // โหลดประวัติการสุ่มใหม่
+            setIsRolling(false);
+        }
+    };
   };
 
   const handleAdminAddToken = async () => {
