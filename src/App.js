@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -16,27 +17,24 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([]);
-  const [itemList, setItemList] = useState([]); // State to store item list
+  const [itemList, setItemList] = useState([]);
 
-  // Fetch history
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
     const data = await res.json();
     setHistory(data.slice(0, 20));
   };
 
-  // Fetch item list from backend
-  const fetchItemList = async () => {
-    const res = await fetch(`${BACKEND_URL}?action=itemlist`);
-    const data = await res.json();
-    setItemList(data); // Store item list from backend
-  };
-
-  // Fetch rates
   const fetchRate = async () => {
     const res = await fetch(`${BACKEND_URL}?action=getrate`);
     const data = await res.json();
     setRate(data);
+  };
+
+  const fetchItemList = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=itemlist`);
+    const data = await res.json();
+    setItemList(data);
   };
 
   const handleAuth = async (action) => {
@@ -50,7 +48,7 @@ export default function App() {
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
       fetchHistory();
       fetchRate();
-      fetchItemList(); // Fetch item list after login
+      fetchItemList();
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -67,11 +65,11 @@ export default function App() {
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
     if (isRolling) return;
+    if (itemList.length === 0) return alert('ยังไม่ได้โหลดรายการไอเท็ม!');
 
     setIsRolling(true);
     setItem(null);
 
-    // Call the backend to get the drawn item
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
@@ -81,10 +79,10 @@ export default function App() {
       setIsRolling(false);
     } else {
       setTimeout(() => {
-        setItem(data); // Set the item returned from the backend
+        setItem(data);
         setToken((prev) => prev - 1);
         setIsRolling(false);
-        fetchHistory(); // Reload history after draw
+        fetchHistory();
       }, 5000);
     }
   };
@@ -137,7 +135,7 @@ export default function App() {
                 <div className="rolling-strip">
                   {Array(30).fill(null).map((_, i) => (
                     <div className="rolling-item" key={i}>
-                      {itemList[Math.floor(Math.random() * itemList.length)]} {/* Use the itemList from backend */}
+                      {itemList[Math.floor(Math.random() * itemList.length)]}
                     </div>
                   ))}
                 </div>
@@ -170,27 +168,6 @@ export default function App() {
                     <td>{entry.character}</td>
                     <td>{entry.item}</td>
                     <td>{entry.timestamp}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Rate Table - closed the table tag here */}
-          <div className="rate-container">
-            <h3>เรทการสุ่ม</h3>
-            <table className="rate-table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Rate</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rate.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{entry.item}</td>
-                    <td>{entry.rate}</td>
                   </tr>
                 ))}
               </tbody>
