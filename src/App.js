@@ -137,7 +137,7 @@ export default function App() {
                 <div className="rolling-strip">
                   {Array(30).fill(null).map((_, i) => (
                     <div className="rolling-item" key={i}>
-                      {itemList[Math.floor(Math.random() * itemList.length)]} {/* Use the itemList from backend */}
+                      {itemList[Math.floor(Math.random() * itemList.length)]?.item} {/* Use the itemList from backend */}
                     </div>
                   ))}
                 </div>
@@ -176,7 +176,6 @@ export default function App() {
             </table>
           </div>
 
-          {/* Rate Table - closed the table tag here */}
           <div className="rate-container">
             <h3>เรทการสุ่ม</h3>
             <table className="rate-table">
