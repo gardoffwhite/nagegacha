@@ -139,8 +139,8 @@ export default function App() {
 
             {item && !isRolling && (
               <div className="item-display-card">
-                <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
-                <div className="character-name">ตัวละคร: {item.character}</div>
+                <div className="item-name">🎁 คุณได้รับ: <span className="item-name">{item.item}</span></div>
+                <div className="character-name">ตัวละคร: <span className="character-name">{item.character}</span></div>
               </div>
             )}
 
