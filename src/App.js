@@ -73,12 +73,11 @@ export default function App() {
       return;
     }
 
-    // เซ็ตไอเท็มที่สุ่มได้ไว้สำหรับการแสดงในส่วนของ "item-display-card"
-    setItem(data);
+    // ลด Token ทันที
     setToken((prev) => prev - 1);
-    fetchHistory();
+    // ไม่ setItem และไม่ fetchHistory ทันที เพื่อไม่ให้แสดงผลก่อนแอนิเมชั่นจบ
 
-    // แสดงรายการทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
+    // สร้างรายการสุ่มทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
     const rollingItems = [...itemList];
     const fadingItems = rollingItems.map((it) => {
       if (it.item === data.item) {
@@ -104,6 +103,9 @@ export default function App() {
       current++;
       if (current >= indexToFade.length) {
         clearInterval(fadeInterval);
+        // เมื่อแอนิเมชั่นจบแล้ว ให้แสดงการ์ดไอเท็มและอัปเดตประวัติ
+        setItem(data);
+        fetchHistory();
       }
     }, 300);
   };
