@@ -271,3 +271,14 @@
     filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
   }
 }
+.rate-table th:nth-child(1),
+.rate-table td:nth-child(1) {
+  width: 70%;
+  text-align: left;
+}
+
+.rate-table th:nth-child(2),
+.rate-table td:nth-child(2) {
+  width: 30%;
+}
+
