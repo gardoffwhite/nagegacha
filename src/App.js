@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -73,31 +73,44 @@ export default function App() {
       return;
     }
 
-    setItem(data);
-    setToken((prev) => prev - 1);
+    setItem(data); // เก็บไอเท็มที่สุ่มได้
+    setToken((prev) => prev - 1); // ลดจำนวน Token
     fetchHistory();
 
+    // สร้างรายการไอเท็มที่ใช้ในการแสดงแอนิเมชัน
     let rollingItems = [...itemList.filter(i => i.item !== data.item)];
-    rollingItems = rollingItems.slice(0, 9); // จำกัดให้โชว์ไม่เยอะเกิน
-    rollingItems.push({ item: data.item });
+    rollingItems.push({ item: data.item }); // เพิ่มไอเท็มที่สุ่มได้ไปที่ท้ายรายการ
 
+    rollingItems = rollingItems.slice(0, 9); // จำกัดจำนวนให้โชว์ไม่เกิน 9 รายการ
+
+    // แปลงรายการไอเท็มให้เป็น object ที่มี opacity เพื่อใช้ในแอนิเมชัน
     const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
     setFadingItemList([...fadingItems]);
 
+    // สุ่มลำดับการทำให้หายไปทีละรายการ
     let indexToFade = [...Array(fadingItems.length - 1).keys()];
     indexToFade = indexToFade.sort(() => Math.random() - 0.5);
 
     let current = 0;
     const fadeInterval = setInterval(() => {
+      // ตรวจสอบหากถึงไอเท็มสุดท้ายให้หยุดแอนิเมชัน
+      if (current >= fadingItems.length - 1) {
+        setFadingItemList(prevState => {
+          const lastItem = [...prevState];
+          lastItem[lastItem.length - 1].opacity = 1; // ไอเท็มสุดท้ายจะคงไว้
+          return lastItem;
+        });
+        clearInterval(fadeInterval);
+        return;
+      }
+
+      // ทำให้รายการไอเท็มหายไปทีละรายการ
       const fadingIndex = indexToFade[current];
       fadingItems[fadingIndex].opacity = 0;
       setFadingItemList([...fadingItems]);
 
       current++;
-      if (current >= indexToFade.length) {
-        clearInterval(fadeInterval);
-      }
-    }, 300);
+    }, 300); // ปรับให้หายทีละชิ้นทุก 300ms
   };
 
   const handleAdminAddToken = async () => {
