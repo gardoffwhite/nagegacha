@@ -165,9 +165,17 @@ export default function App() {
             <div className="Redattospectrum">คงเหลือ: {token}</div>
 
             <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-            <button className="btn btn-gacha" onClick={handleDraw} disabled={isDrawing}>
-              {isDrawing ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
-            </button>
+            <button className="btn btn-gacha" onClick={handleGacha} disabled={isRolling}>
+  {isRolling ? (
+    <div className="spinner">
+      <div className="loader"></div>
+      <span>กำลังสุ่ม...</span>
+    </div>
+  ) : (
+    "สุ่มไอเท็ม 🔮"
+  )}
+</button>
+
 
             <div className="item-list-container">
               {fadingItemList.map((item, index) => (
