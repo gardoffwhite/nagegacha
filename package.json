@@ -7,11 +7,11 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "serve": "^14.0.1"  // เพิ่ม serve ใน dependencies
+    "serve": "^14.0.1"
   },
   "scripts": {
-    "start": "serve -s build",  // ใช้ serve เพื่อให้บริการไฟล์ static
-    "build": "react-scripts build",  // คำสั่ง build ปกติ
+    "start": "serve -s build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   }
