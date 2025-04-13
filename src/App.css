@@ -275,13 +275,13 @@
 }
 .rate-table th:nth-child(1),
 .rate-table td:nth-child(1) {
-  width: 50%;
+  width: 40%;
   text-align: left;
 }
 
 .rate-table th:nth-child(2),
 .rate-table td:nth-child(2) {
-  width: 15%;
+  width: 10%;
 }
 .history-table th,
 .history-table td {
