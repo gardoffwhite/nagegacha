@@ -84,8 +84,8 @@ export default function App() {
     setToken((prev) => prev - 1);
     fetchHistory();
 
-    const spinDuration = 5000;
-    const spinInterval = 100;
+    const spinDuration = 5000; // ระยะเวลาในการเลื่อน
+    const spinInterval = 100;  // เวลาที่ใช้ในการเลื่อนแต่ละรอบ
     let spinCount = spinDuration / spinInterval;
 
     // สร้างรายการไอเท็มปลอมและเพิ่มไอเท็มจริงไว้สุดท้าย
@@ -96,14 +96,14 @@ export default function App() {
 
     const interval = setInterval(() => {
       if (rollingItems.length > 1) {
-        rollingItems = rollingItems.slice(1);
+        rollingItems = rollingItems.slice(1); // ลบไอเท็มออกทีละชิ้น
         setItemList([...rollingItems]);
       }
 
       spinCount--;
       if (spinCount <= 0 || rollingItems.length === 1) {
         clearInterval(interval);
-        setIsRolling(false);
+        setIsRolling(false); // หยุดแอนิเมชันเมื่อถึงเวลาหรือเหลือแค่ไอเท็มสุดท้าย
       }
     }, spinInterval);
   };
