@@ -13,6 +13,7 @@ export default function App() {
   const [view, setView] = useState('login');
   const [history, setHistory] = useState([]);
   const [itemList, setItemList] = useState([]); // รายการไอเท็มทั้งหมด
+  const [itemRates, setItemRates] = useState([]); // รายการเรทไอเท็ม
   const [isRolling, setIsRolling] = useState(false);
 
   // ฟังก์ชันดึงรายการไอเท็มทั้งหมดจาก backend
@@ -20,6 +21,13 @@ export default function App() {
     const res = await fetch(`${BACKEND_URL}?action=itemlist`);
     const data = await res.json();
     setItemList(data); // เก็บรายการไอเท็มจาก backend
+  };
+
+  // ฟังก์ชันดึงรายการเรทไอเท็มจาก backend
+  const fetchItemRates = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=itemrates`);
+    const data = await res.json();
+    setItemRates(data); // เก็บเรทไอเท็มจาก backend
   };
 
   // ฟังก์ชันดึงประวัติการสุ่ม
@@ -41,6 +49,7 @@ export default function App() {
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
       fetchHistory();
       fetchItemList(); // ดึงรายการไอเท็มหลังจากล็อกอิน
+      fetchItemRates(); // ดึงรายการเรทไอเท็มหลังจากล็อกอิน
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -154,6 +163,26 @@ export default function App() {
                     <td>{entry.character}</td>
                     <td>{entry.item}</td>
                     <td>{entry.timestamp}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="item-rates-container">
+            <h3>เรทไอเท็ม</h3>
+            <table className="item-rates-table">
+              <thead>
+                <tr>
+                  <th>ไอเท็ม</th>
+                  <th>เรท</th>
+                </tr>
+              </thead>
+              <tbody>
+                {itemRates.map((rate, index) => (
+                  <tr key={index}>
+                    <td>{rate.item}</td>
+                    <td>{rate.rate}%</td>
                   </tr>
                 ))}
               </tbody>
