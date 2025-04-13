@@ -228,9 +228,11 @@
 }
 
 .gacha-logo {
-  max-width: 65px;
-  height: auto;
+  max-width: 80%; /* ใช้ 100% ของขนาด container */
+  height: auto; /* ให้ความสูงอัตโนมัติตามอัตราส่วน */
+  object-fit: contain; /* ให้แน่ใจว่าโลโก้จะไม่ล้นออกจาก container */
 }
+
 
 }
 
