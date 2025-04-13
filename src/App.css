@@ -16,7 +16,6 @@
   width: 100%;
   max-width: 1200px;
   margin-top: 20px;
-  flex-wrap: wrap;
 }
 
 .dashboard-container, .history-container, .rate-container {
@@ -29,13 +28,13 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 30%;
   color: black;
-  margin-bottom: 20px;
 }
 
 .history-table, .rate-table {
   margin-top: 20px;
   width: 100%;
   border-collapse: collapse;
+  color: black;
 }
 
 .history-table th, .history-table td, .rate-table th, .rate-table td {
@@ -43,6 +42,7 @@
   border: 1px solid #ddd;
   text-align: center;
   font-size: 14px;
+  color: black;
 }
 
 .history-table th, .rate-table th {
@@ -57,6 +57,7 @@
   margin-bottom: 10px;
   font-weight: bold;
   font-size: 18px;
+  color: black;
 }
 
 .btn {
@@ -75,10 +76,6 @@
 
 .btn-logout {
   background-color: #e60000;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 999;
 }
 
 .btn:hover {
@@ -91,6 +88,7 @@
   width: 80%;
   border-radius: 8px;
   border: 1px solid #ddd;
+  color: black;
 }
 
 .item-display-card {
@@ -102,6 +100,7 @@
   width: 80%;
   text-align: center;
   animation: pulse 1s ease-in-out infinite;
+  transition: transform 0.3s ease-in-out;
 }
 
 .item-display-card:hover {
@@ -168,34 +167,6 @@
   transition: all 0.3s ease;
 }
 
-/* กำหนดการแสดงผลของไอเท็มที่สุ่ม */
-.rolling-item-box.fade-out {
-  opacity: 0;
-  transition: opacity 0.3s ease-out;
-}
-
-/* การจัดการความกว้างของคอลัมน์ในตาราง */
-.history-table th:nth-child(1),
-.history-table td:nth-child(1),
-.rate-table th:nth-child(1),
-.rate-table td:nth-child(1) {
-  width: 20%;
-}
-
-.history-table th:nth-child(2),
-.history-table td:nth-child(2),
-.rate-table th:nth-child(2),
-.rate-table td:nth-child(2) {
-  width: 40%;
-}
-
-.history-table th:nth-child(3),
-.history-table td:nth-child(3),
-.rate-table th:nth-child(3),
-.rate-table td:nth-child(3) {
-  width: 40%;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
@@ -215,7 +186,6 @@
   justify-content: center;
   margin-top: 20px;
   gap: 8px;
-  padding-bottom: 60px; /* เพิ่มพื้นที่ด้านล่างให้มีปุ่ม logout */
 }
 
 .item {
@@ -226,8 +196,7 @@
   font-weight: bold;
   color: #d35400;
   transition: opacity 0.5s ease;
-  opacity: 1;
-  font-size: 14px;
+  opacity: 1; /* เริ่มต้นให้มีความทึบ */
 }
 
 .item.fade-out {
