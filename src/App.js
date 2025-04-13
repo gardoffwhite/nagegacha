@@ -17,6 +17,8 @@ export default function App() {
   const [rate, setRate] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [fadingItemList, setFadingItemList] = useState([]);
+  const [isDrawing, setIsDrawing] = useState(false);  // ตัวแปรใหม่เพื่อป้องกันการกดปุ่มซ้ำ
+  const [showCard, setShowCard] = useState(false);  // สถานะในการแสดง display card
 
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
@@ -61,6 +63,10 @@ export default function App() {
   };
 
   const handleDraw = async () => {
+    if (isDrawing) return;  // ถ้ามีการสุ่มแล้วจะไม่ให้กดปุ่มอีก
+    setIsDrawing(true);  // ตั้งค่า isDrawing เป็น true เพื่อเริ่มต้นแอนิเมชัน
+    setShowCard(false);  // ซ่อน display card ก่อนการสุ่มใหม่
+
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
 
@@ -70,6 +76,7 @@ export default function App() {
 
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
+      setIsDrawing(false);  // ตั้งค่า isDrawing เป็น false หากไม่มี Token
       return;
     }
 
@@ -100,7 +107,14 @@ export default function App() {
           lastItem[lastItem.length - 1].opacity = 1; // ไอเท็มสุดท้ายจะคงไว้
           return lastItem;
         });
+
+        // แสดง display card หลังแอนิเมชันเสร็จ
+        setTimeout(() => {
+          setShowCard(true);
+        }, 300);  // ปรับเวลาให้ตรงกับช่วงสุดท้ายของแอนิเมชัน
+
         clearInterval(fadeInterval);
+        setIsDrawing(false);  // ตั้งค่า isDrawing เป็น false เมื่อแอนิเมชันเสร็จ
         return;
       }
 
@@ -152,7 +166,7 @@ export default function App() {
             <h2>🎮 N-age Warzone Gacha!!</h2>
             <div className="token-display">Token คงเหลือ: {token}</div>
             <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-            <button className="btn btn-gacha" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
+            <button className="btn btn-gacha" onClick={handleDraw} disabled={isDrawing}>สุ่มไอเท็ม 🔮</button>
 
             <div className="item-list-container">
               {fadingItemList.map((item, index) => (
@@ -162,7 +176,8 @@ export default function App() {
               ))}
             </div>
 
-            {item && (
+            {/* แสดง display card หลังจากสุ่มเสร็จ */}
+            {showCard && item && (
               <div className="item-display-card">
                 <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
                 <div className="character-name">ตัวละคร: {item.character}</div>
