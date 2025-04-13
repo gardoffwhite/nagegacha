@@ -63,9 +63,9 @@ export default function App() {
   };
 
  const handleDraw = async () => {
-  if (isDrawing) return; // ถ้ามีการสุ่มแล้วจะไม่ให้กดปุ่มอีก
-  setIsDrawing(true); // ตั้งค่า isDrawing เป็น true เพื่อเริ่มต้นแอนิเมชัน
-  setShowCard(false); // ซ่อน display card ก่อนการสุ่มใหม่
+  if (isDrawing) return;
+  setIsDrawing(true);
+  setShowCard(false);
 
   if (token <= 0) {
     alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
@@ -89,14 +89,14 @@ export default function App() {
     return;
   }
 
-  setItem(data); // เก็บไอเท็มที่สุ่มได้
-  setToken((prev) => prev - 1); // ลดจำนวน Token
+  setItem(data);
+  setToken((prev) => prev - 1);
   fetchHistory();
 
   // สุ่มรายการไอเท็มทั้งหมด
   let rollingItems = [...itemList.filter(i => i.item !== data.item)];
   const randomIndex = Math.floor(Math.random() * (rollingItems.length + 1));
-  rollingItems.splice(randomIndex, 0, { item: data.item }); // <--- ไอเท็มสุ่มจะอยู่ตำแหน่งสุ่ม
+  rollingItems.splice(randomIndex, 0, { item: data.item });
 
   // แปลงรายการไอเท็มให้เป็น object ที่มี opacity เพื่อใช้ในแอนิเมชัน
   const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
@@ -119,10 +119,10 @@ export default function App() {
       // แสดง display card หลังแอนิเมชันเสร็จ
       setTimeout(() => {
         setShowCard(true);
-      }, 300);  // ปรับเวลาให้ตรงกับช่วงสุดท้ายของแอนิเมชัน
+      }, 300);
 
       clearInterval(fadeInterval);
-      setIsDrawing(false);  // ตั้งค่า isDrawing เป็น false เมื่อแอนิเมชันเสร็จ
+      setIsDrawing(false);
       return;
     }
 
@@ -132,8 +132,9 @@ export default function App() {
     setFadingItemList([...fadingItems]);
 
     current++;
-  }, 300); // ปรับให้หายทีละชิ้นทุก 300ms
+  }, 300); // ทำให้ไอเท็มหายทีละชิ้นทุก 300ms
 };
+
 
 
 
