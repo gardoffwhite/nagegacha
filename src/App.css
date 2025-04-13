@@ -134,18 +134,6 @@
   100% { opacity: 1; }
 }
 
-.rolling-container {
-  display: none;
-}
-
-.rolling-strip {
-  display: none;
-}
-
-.rolling-item {
-  display: none;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
