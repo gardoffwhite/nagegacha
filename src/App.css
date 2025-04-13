@@ -91,7 +91,6 @@
   color: black;
 }
 
-/* Animation for fading items */
 .rolling-container {
   overflow: hidden;
   height: 60px;
@@ -106,12 +105,7 @@
 .rolling-strip {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  opacity: 1;
-}
-
-.rolling-strip.animate {
-  animation: fadeOutItems 10s ease-in-out forwards;
+  animation: scrollItemsY 5s ease-in-out infinite;
 }
 
 .rolling-item {
@@ -122,19 +116,12 @@
   color: #ff0000;
   background: #707679;
   border-bottom: 1px solid #333;
-  opacity: 1;
+  visibility: hidden; /* เปลี่ยนให้ไอเท็มที่หายไปไม่แสดง */
 }
 
-@keyframes fadeOutItems {
-  0% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+@keyframes scrollItemsY {
+  0% { transform: translateY(0); visibility: visible; }
+  100% { transform: translateY(-100%); visibility: hidden; }
 }
 
 .history-container {
@@ -192,10 +179,12 @@
   transition: background-color 0.2s ease;
 }
 
+/* Add some spacing for history container */
 .history-container {
   margin-top: 20px;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
