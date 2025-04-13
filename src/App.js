@@ -147,7 +147,12 @@ export default function App() {
         <div className="container">
           <div className="dashboard-container">
             <h2>🎮 N-age Warzone Gacha!!</h2>
-            <div className="token-display">Token คงเหลือ: {token}</div>
+            <div className="diamond-text">
+  <img src="https://i.imgur.com/9uEjL4T.png" alt="Redattospectrum " className="diamond-glow" />
+  Red attospectrum
+</div>
+<div className="Redattospectrum">คงเหลือ: {token}</div>
+
             <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
             <button className="btn btn-gacha" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
 
