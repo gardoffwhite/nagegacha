@@ -18,6 +18,17 @@ export default function App() {
   const [itemList, setItemList] = useState([]);
   const [fadingItemList, setFadingItemList] = useState([]);
 
+  // ฟังก์ชันแปลง timestamp ให้เป็นรูปแบบ "YY/MM/DD HH:mm"
+  const formatTimestamp = (timestamp) => {
+    const dateObj = new Date(timestamp);
+    const yy = dateObj.getFullYear().toString().slice(-2);
+    const mm = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+    const dd = ("0" + dateObj.getDate()).slice(-2);
+    const hh = ("0" + dateObj.getHours()).slice(-2);
+    const min = ("0" + dateObj.getMinutes()).slice(-2);
+    return `${yy}/${mm}/${dd} ${hh}:${min}`;
+  };
+
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
     const data = await res.json();
@@ -73,9 +84,8 @@ export default function App() {
       return;
     }
 
-    // ลด Token ทันที
+    // ลด Token ทันที แต่ยังไม่ setItem และไม่ fetchHistory เพื่อเลื่อนการแสดงผลจนกว่าแอนิเมชั่นจะจบ
     setToken((prev) => prev - 1);
-    // ไม่ setItem และไม่ fetchHistory ทันที เพื่อไม่ให้แสดงผลก่อนแอนิเมชั่นจบ
 
     // สร้างรายการสุ่มทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
     const rollingItems = [...itemList];
@@ -188,7 +198,7 @@ export default function App() {
                   <tr key={index}>
                     <td>{entry.character}</td>
                     <td>{entry.item}</td>
-                    <td>{entry.timestamp}</td>
+                    <td>{formatTimestamp(entry.timestamp)}</td>
                   </tr>
                 ))}
               </tbody>
