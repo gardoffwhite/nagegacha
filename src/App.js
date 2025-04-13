@@ -148,7 +148,7 @@ export default function App() {
           <div className="dashboard-container">
            <div className="gacha-header">
   <img
-    src="https://i.imgur.com/t7Lmfda.png"
+    src="https://i.imgur.com/hLylouD.png"
     alt="N-age Warzone Gacha"
     className="gacha-logo"
   />
