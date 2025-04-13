@@ -11,9 +11,19 @@ export default function App() {
   const [token, setToken] = useState(0);
   const [item, setItem] = useState(null);
   const [view, setView] = useState('login');
-  const [history, setHistory] = useState([]);
-  const [itemList, setItemList] = useState([]);
+  const [adminUser, setAdminUser] = useState('');
+  const [adminTokens, setAdminTokens] = useState(0);
   const [isRolling, setIsRolling] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [rate, setRate] = useState([]);
+  const [itemList, setItemList] = useState([]); // State to store item list
+
+  // Fetch history
+  const fetchHistory = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=gethistory`);
+    const data = await res.json();
+    setHistory(data.slice(0, 20));
+  };
 
   // Fetch item list from backend
   const fetchItemList = async () => {
@@ -22,10 +32,11 @@ export default function App() {
     setItemList(data); // Store item list from backend
   };
 
-  const fetchHistory = async () => {
-    const res = await fetch(`${BACKEND_URL}?action=gethistory`);
+  // Fetch rates
+  const fetchRate = async () => {
+    const res = await fetch(`${BACKEND_URL}?action=getrate`);
     const data = await res.json();
-    setHistory(data.slice(0, 20));
+    setRate(data);
   };
 
   const handleAuth = async (action) => {
@@ -38,6 +49,7 @@ export default function App() {
       setToken(result.token || 0);
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
       fetchHistory();
+      fetchRate();
       fetchItemList(); // Fetch item list after login
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
@@ -57,49 +69,57 @@ export default function App() {
     if (isRolling) return;
 
     setIsRolling(true);
+    setItem(null);
 
-    // เริ่มการสุ่ม
-    const spinDuration = 5000; // ระยะเวลาในการสุ่ม (5 วินาที)
-    const spinInterval = 100; // ความเร็วในการสุ่ม
+    // เริ่มการแสดงไอเท็มทีละชิ้น
+    const spinDuration = 5000; // ระยะเวลาในการแสดง (5 วินาที)
+    const spinInterval = 100; // ความเร็วในการแสดง
     let spinCount = spinDuration / spinInterval;
 
-    // สร้าง array สำหรับแสดงไอเท็มทั้งหมด
-    let rollingItems = [...itemList];
+    // คัดเลือกไอเท็มที่สุ่มจาก backend
+    let remainingItems = [...itemList]; // คัดลอก itemList เพื่อทำการลบไอเท็ม
+    setItemList(remainingItems); // ตั้งค่ารายการไอเท็มเริ่มต้น
 
-    // ค่อยๆ ลบไอเท็มออกทีละชิ้น
-    let currentItemList = rollingItems.slice(); // สร้างสำเนารายการไอเท็ม
     const interval = setInterval(() => {
-      if (currentItemList.length > 1) {
-        // ลบไอเท็มแรกออก
-        currentItemList.shift();
-        setItemList(currentItemList); // อัปเดตรายการไอเท็ม
-      } else {
-        clearInterval(interval); // หยุดการสุ่มเมื่อเหลือไอเท็มเดียว
-        handleFinishDraw(currentItemList[0]); // แสดงผลเมื่อการสุ่มเสร็จ
-      }
+      remainingItems = remainingItems.slice(1); // ลบไอเท็มออกทีละชิ้น
+      setItemList(remainingItems); // อัปเดตรายการที่แสดง
+
       spinCount--;
+
       if (spinCount <= 0) {
-        clearInterval(interval); // หยุดการสุ่ม
+        clearInterval(interval); // หยุดการแสดงเมื่อครบเวลา
+        handleFinishDraw(); // เมื่อการแสดงเสร็จ ให้แสดงผลไอเท็ม
       }
     }, spinInterval);
+
+    // ฟังก์ชันที่จะทำเมื่อการแสดงเสร็จ
+    const handleFinishDraw = async () => {
+      // ดึงไอเท็มที่สุ่มได้จาก backend
+      const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data === 'NotEnoughTokens') {
+        alert('Token ไม่พอ!');
+        setIsRolling(false);
+      } else {
+        setItem(data); // ตั้งค่าไอเท็มที่สุ่มได้จาก backend
+        setToken((prev) => prev - 1);
+        fetchHistory(); // โหลดประวัติการสุ่มใหม่
+        setIsRolling(false);
+      }
+    };
   };
 
-  // ฟังก์ชันที่ทำเมื่อการสุ่มเสร็จ
-  const handleFinishDraw = async (finalItem) => {
-    // ดึงข้อมูลจาก backend
-    const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data === 'NotEnoughTokens') {
-      alert('Token ไม่พอ!');
-      setIsRolling(false);
-    } else {
-      setItem(finalItem); // ตั้งค่าไอเท็มที่สุ่มได้
-      setToken((prev) => prev - 1); // ลด Token
-      fetchHistory(); // โหลดประวัติการสุ่มใหม่
-      setIsRolling(false);
-    }
+  const handleAdminAddToken = async () => {
+    const params = new URLSearchParams({
+      action: 'addtoken',
+      username: adminUser,
+      token: adminTokens,
+    });
+    const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
+    const result = await res.json();
+    alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
   };
 
   return (
@@ -114,6 +134,16 @@ export default function App() {
         </div>
       )}
 
+      {view === 'register' && (
+        <div className="auth-container">
+          <h2>สมัครสมาชิก</h2>
+          <input className="input-field" placeholder="ชื่อผู้ใช้" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <input className="input-field" placeholder="รหัสผ่าน" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <button className="btn" onClick={() => handleAuth('register')}>สมัครสมาชิก</button>
+          <p>มีบัญชีอยู่แล้ว? <span className="link" onClick={() => setView('login')}>เข้าสู่ระบบ</span></p>
+        </div>
+      )}
+
       {view === 'dashboard' && (
         <div className="container">
           <div className="dashboard-container">
@@ -121,7 +151,7 @@ export default function App() {
             <div className="token-display">Token คงเหลือ: {token}</div>
             <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
             <button className="btn btn-gacha" onClick={handleDraw} disabled={isRolling}>
-              {isRolling ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
+              {isRolling ? 'กำลังแสดงไอเท็ม...' : 'แสดงไอเท็ม 🔮'}
             </button>
 
             {isRolling && (
@@ -129,7 +159,7 @@ export default function App() {
                 <div className="rolling-strip">
                   {itemList.map((item, index) => (
                     <div className="rolling-item" key={index}>
-                      {item.item} {/* ใช้รายการไอเท็มจาก backend */}
+                      {item?.item}
                     </div>
                   ))}
                 </div>
