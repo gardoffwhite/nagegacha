@@ -134,19 +134,6 @@
   100% { opacity: 1; }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
-
-  .dashboard-container, .history-container, .rate-container {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-}
-
-/* 👇 ส่วนใหม่สำหรับระบบสุ่มแบบค่อยๆจางหาย */
 .fade-out {
   animation: fadeOut 0.3s forwards;
 }
@@ -178,4 +165,16 @@
   font-weight: bold;
   color: #d35400;
   transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .dashboard-container, .history-container, .rate-container {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 }
