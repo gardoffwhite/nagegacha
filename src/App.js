@@ -1,231 +1,208 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+.app-container {
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  text-align: center;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+}
 
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
+.container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+}
 
-export default function App() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [characterName, setCharacterName] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState(0);
-  const [item, setItem] = useState(null);
-  const [view, setView] = useState('login');
-  const [adminUser, setAdminUser] = useState('');
-  const [adminTokens, setAdminTokens] = useState(0);
-  const [history, setHistory] = useState([]);
-  const [rate, setRate] = useState([]);
-  const [itemList, setItemList] = useState([]);
-  const [fadingItemList, setFadingItemList] = useState([]);
+.dashboard-container, .history-container, .rate-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  color: black;
+}
 
-  // ฟังก์ชันแปลง timestamp ให้เป็นรูปแบบ "YY/MM/DD HH:mm"
-  const formatTimestamp = (timestamp) => {
-    const dateObj = new Date(timestamp);
-    const yy = dateObj.getFullYear().toString().slice(-2);
-    const mm = ("0" + (dateObj.getMonth() + 1)).slice(-2);
-    const dd = ("0" + dateObj.getDate()).slice(-2);
-    const hh = ("0" + dateObj.getHours()).slice(-2);
-    const min = ("0" + dateObj.getMinutes()).slice(-2);
-    return `${yy}/${mm}/${dd} ${hh}:${min}`;
-  };
+.history-table, .rate-table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  color: black;
+}
 
-  const fetchHistory = async () => {
-    const res = await fetch(`${BACKEND_URL}?action=gethistory`);
-    const data = await res.json();
-    setHistory(data.slice(0, 10));
-  };
+.history-table th, .history-table td, .rate-table th, .rate-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+  color: black;
+}
 
-  const fetchItemList = async () => {
-    const res = await fetch(`${BACKEND_URL}?action=itemlist`);
-    const data = await res.json();
-    setItemList(data);
-  };
+.history-table th, .rate-table th {
+  background-color: #f0f0f0;
+}
 
-  const fetchRate = async () => {
-    const res = await fetch(`${BACKEND_URL}?action=getrate`);
-    const data = await res.json();
-    setRate(data);
-  };
+.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
 
-  const handleAuth = async (action) => {
-    const params = new URLSearchParams({ action, username, password });
-    const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
-    const result = await res.json();
+.token-display {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  color: black;
+}
 
-    if (result.status === 'LoginSuccess') {
-      setIsLoggedIn(true);
-      setToken(result.token || 0);
-      setView(result.role === 'admin' ? 'admin' : 'dashboard');
-      fetchHistory();
-      fetchRate();
-      fetchItemList();
-    } else if (result.status === 'Registered') {
-      alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
-      setView('login');
-    } else if (result.status === 'UsernameAlreadyExists') {
-      alert('ชื่อผู้ใช้นี้มีอยู่แล้ว');
-    } else if (result.status === 'InvalidCredentials') {
-      alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
-    } else {
-      alert('เกิดข้อผิดพลาด: ' + result.status);
-    }
-  };
+.btn {
+  background-color: #00c8ff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px 0;
+}
 
-  const handleDraw = async () => {
-    if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
-    if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
+.btn-gacha {
+  background-color: #ff7a00;
+}
 
-    const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
-    const res = await fetch(url);
-    const data = await res.json();
+.btn-logout {
+  background-color: #e60000;
+}
 
-    if (data === 'NotEnoughTokens') {
-      alert('Token ไม่พอ!');
-      return;
-    }
+.btn:hover {
+  background-color: #0088cc;
+}
 
-    // ลด Token ทันที แต่ยังไม่ setItem และไม่ fetchHistory เพื่อเลื่อนการแสดงผลจนกว่าแอนิเมชั่นจะจบ
-    setToken((prev) => prev - 1);
+.input-field {
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 80%;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  color: black;
+}
 
-    // สร้างรายการสุ่มทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
-    const rollingItems = [...itemList];
-    const fadingItems = rollingItems.map((it) => {
-      if (it.item === data.item) {
-        return { ...it, opacity: 1, isDrawn: true };
-      }
-      return { ...it, opacity: 1, isDrawn: false };
-    });
-    setFadingItemList([...fadingItems]);
+.item-display-card {
+  background-color: #fffbf0;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  width: 80%;
+  text-align: center;
+  animation: pulse 1s ease-in-out infinite;
+  transition: transform 0.3s ease-in-out;
+}
 
-    // สุ่มลำดับ index สำหรับไอเท็มที่ไม่ใช่ไอเท็มที่สุ่มได้จริง
-    let indexToFade = fadingItems
-      .map((item, index) => ({ index, isDrawn: item.isDrawn }))
-      .filter((entry) => !entry.isDrawn)
-      .map((entry) => entry.index);
-    indexToFade = indexToFade.sort(() => Math.random() - 0.5);
+.item-display-card:hover {
+  transform: scale(1.05);
+}
 
-    let current = 0;
-    const fadeInterval = setInterval(() => {
-      const fadingIndex = indexToFade[current];
-      fadingItems[fadingIndex].opacity = 0;
-      setFadingItemList([...fadingItems]);
+.item-name {
+  font-size: 26px;
+  font-weight: bold;
+  color: #ff5733;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  margin-bottom: 15px;
+}
 
-      current++;
-      if (current >= indexToFade.length) {
-        clearInterval(fadeInterval);
-        // เมื่อแอนิเมชั่นจบแล้ว ให้แสดงการ์ดไอเท็มและอัปเดตประวัติ
-        setItem(data);
-        fetchHistory();
-      }
-    }, 300);
-  };
+.character-name {
+  font-size: 18px;
+  color: #2c3e50;
+  font-weight: 500;
+  margin-top: 15px;
+  animation: fadeIn 2s ease-in-out;
+}
 
-  const handleAdminAddToken = async () => {
-    const params = new URLSearchParams({
-      action: 'addtoken',
-      username: adminUser,
-      token: adminTokens,
-    });
-    const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
-    const result = await res.json();
-    alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
-  };
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
 
-  return (
-    <div className="app-container">
-      {view === 'login' && (
-        <div className="auth-container">
-          <h2>เข้าสู่ระบบ</h2>
-          <input className="input-field" placeholder="ชื่อผู้ใช้" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input className="input-field" placeholder="รหัสผ่าน" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button className="btn" onClick={() => handleAuth('login')}>เข้าสู่ระบบ</button>
-          <p>ยังไม่มีบัญชี? <span className="link" onClick={() => setView('register')}>สมัครสมาชิก</span></p>
-        </div>
-      )}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
 
-      {view === 'register' && (
-        <div className="auth-container">
-          <h2>สมัครสมาชิก</h2>
-          <input className="input-field" placeholder="ชื่อผู้ใช้" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input className="input-field" placeholder="รหัสผ่าน" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button className="btn" onClick={() => handleAuth('register')}>สมัครสมาชิก</button>
-          <p>มีบัญชีอยู่แล้ว? <span className="link" onClick={() => setView('login')}>เข้าสู่ระบบ</span></p>
-        </div>
-      )}
+.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
 
-      {view === 'dashboard' && (
-        <div className="container">
-          <div className="dashboard-container">
-            <h2>🎮 N-age Warzone Gacha!!</h2>
-            <div className="token-display">Token คงเหลือ: {token}</div>
-            <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-            <button className="btn btn-gacha" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { 
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+}
 
-            <div className="item-list-container">
-              {fadingItemList.map((item, index) => (
-                <div
-                  className="item"
-                  key={index}
-                  style={{ opacity: item.opacity, transition: 'opacity 0.5s ease' }}
-                >
-                  {item.item}
-                </div>
-              ))}
-            </div>
+.rolling-item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
 
-            {item && (
-              <div className="item-display-card">
-                <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
-                <div className="character-name">ตัวละคร: {item.character}</div>
-              </div>
-            )}
+.rolling-item-box {
+  background-color: #fff8e1;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-weight: bold;
+  color: #d35400;
+  transition: all 0.3s ease;
+}
 
-            <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
-          </div>
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
 
-          <div className="history-container">
-            <h3>ประวัติการสุ่ม</h3>
-            <table className="history-table">
-              <thead>
-                <tr>
-                  <th>ตัวละคร</th>
-                  <th>ไอเท็มที่ได้รับ</th>
-                  <th>เวลา</th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{entry.character}</td>
-                    <td>{entry.item}</td>
-                    <td>{formatTimestamp(entry.timestamp)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+  .dashboard-container, .history-container, .rate-container {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
 
-          <div className="rate-container">
-            <h3>เรทการสุ่ม</h3>
-            <table className="rate-table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Rate</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rate.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{entry.item}</td>
-                    <td>{entry.rate}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+/* ส่วนใหม่ที่เพิ่มมา */
+.item-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 8px;
+}
+
+.item {
+  background-color: #fff8e1;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  color: #d35400;
+  transition: opacity 0.5s ease;
+  opacity: 1; /* เริ่มต้นให้มีความทึบ */
+}
+
+.item.fade-out {
+  opacity: 0; /* ทำให้ไอเท็มจางหายไป */
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
