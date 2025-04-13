@@ -158,3 +158,38 @@
     margin-bottom: 20px;
   }
 }
+
+/* 👇 ส่วนใหม่สำหรับระบบสุ่มแบบค่อยๆจางหาย */
+
+.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { 
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+.rolling-item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.rolling-item-box {
+  background-color: #fff8e1;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-weight: bold;
+  color: #d35400;
+  transition: all 0.3s ease;
+}
