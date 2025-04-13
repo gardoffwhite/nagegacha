@@ -16,23 +16,20 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([]);
-  const [itemList, setItemList] = useState([]); // State to store item list
+  const [itemList, setItemList] = useState([]);
 
-  // Fetch history
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
     const data = await res.json();
     setHistory(data.slice(0, 20));
   };
 
-  // Fetch item list from backend
   const fetchItemList = async () => {
     const res = await fetch(`${BACKEND_URL}?action=itemlist`);
     const data = await res.json();
-    setItemList(data); // Store item list from backend
+    setItemList(data);
   };
 
-  // Fetch rates
   const fetchRate = async () => {
     const res = await fetch(`${BACKEND_URL}?action=getrate`);
     const data = await res.json();
@@ -50,7 +47,7 @@ export default function App() {
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
       fetchHistory();
       fetchRate();
-      fetchItemList(); // Fetch item list after login
+      fetchItemList();
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -71,45 +68,44 @@ export default function App() {
     setIsRolling(true);
     setItem(null);
 
-    // เริ่มสุ่ม
-    const spinDuration = 5000; // ระยะเวลาในการสุ่ม (5 วินาที)
-    const spinInterval = 100; // ความเร็วในการสุ่ม
+    // ดึงไอเท็มที่สุ่มได้จริงจาก backend ก่อน
+    const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data === 'NotEnoughTokens') {
+      alert('Token ไม่พอ!');
+      setIsRolling(false);
+      return;
+    }
+
+    // ตั้งค่าไอเท็มที่ได้ไว้ล่วงหน้า
+    setItem(data);
+    setToken((prev) => prev - 1);
+    fetchHistory();
+
+    const spinDuration = 5000;
+    const spinInterval = 100;
     let spinCount = spinDuration / spinInterval;
 
-    // สร้าง array สำหรับแสดงไอเท็ม
-    let rollingItems = [...itemList];
+    // สร้างรายการไอเท็มปลอมและเพิ่มไอเท็มจริงไว้สุดท้าย
+    let rollingItems = [...itemList.filter(i => i.item !== data.item)];
+    rollingItems.push({ item: data.item });
 
-    setItemList(rollingItems); // ใช้รายการที่สุ่มขึ้นมาแสดงในขณะสุ่ม
+    setItemList([...rollingItems]);
 
     const interval = setInterval(() => {
-        // ค่อย ๆ จางหายไอเท็มออกจากรายการ
+      if (rollingItems.length > 1) {
         rollingItems = rollingItems.slice(1);
-        setItemList([...rollingItems]); // อัปเดตรายการไอเท็มที่แสดง
-        spinCount--;
+        setItemList([...rollingItems]);
+      }
 
-        if (spinCount <= 0) {
-            clearInterval(interval); // หยุดการสุ่มเมื่อครบเวลา
-            handleFinishDraw(); // เมื่อการสุ่มเสร็จ ให้แสดงผลไอเท็ม
-        }
+      spinCount--;
+      if (spinCount <= 0 || rollingItems.length === 1) {
+        clearInterval(interval);
+        setIsRolling(false);
+      }
     }, spinInterval);
-
-    // ฟังก์ชันที่จะทำเมื่อการสุ่มเสร็จ
-    const handleFinishDraw = async () => {
-        // ดึงไอเท็มที่สุ่มได้จาก backend
-        const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if (data === 'NotEnoughTokens') {
-            alert('Token ไม่พอ!');
-            setIsRolling(false);
-        } else {
-            setItem(data); // ตั้งค่าไอเท็มที่สุ่มได้จาก backend
-            setToken((prev) => prev - 1);
-            fetchHistory(); // โหลดประวัติการสุ่มใหม่
-            setIsRolling(false);
-        }
-    };
   };
 
   const handleAdminAddToken = async () => {
