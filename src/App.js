@@ -136,20 +136,6 @@ export default function App() {
 };
 
 
-        clearInterval(fadeInterval);
-        setIsDrawing(false);  // ตั้งค่า isDrawing เป็น false เมื่อแอนิเมชันเสร็จ
-        return;
-      }
-
-      // ทำให้รายการไอเท็มหายไปทีละรายการ
-      const fadingIndex = indexToFade[current];
-      fadingItems[fadingIndex].opacity = 0;
-      setFadingItemList([...fadingItems]);
-
-      current++;
-    }, 300); // ปรับให้หายทีละชิ้นทุก 300ms
-  };
-
   const handleAdminAddToken = async () => {
     const params = new URLSearchParams({
       action: 'addtoken',
