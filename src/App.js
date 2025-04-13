@@ -13,10 +13,10 @@ export default function App() {
   const [view, setView] = useState('login');
   const [adminUser, setAdminUser] = useState('');
   const [adminTokens, setAdminTokens] = useState(0);
-  const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([]);
   const [itemList, setItemList] = useState([]);
+  const [fadingItemList, setFadingItemList] = useState([]);
 
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
@@ -63,10 +63,6 @@ export default function App() {
   const handleDraw = async () => {
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
-    if (isRolling) return;
-
-    setIsRolling(true);
-    setItem(null);
 
     // ดึงไอเท็มที่สุ่มได้จริงจาก backend ก่อน
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
@@ -75,7 +71,6 @@ export default function App() {
 
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
-      setIsRolling(false);
       return;
     }
 
@@ -84,28 +79,32 @@ export default function App() {
     setToken((prev) => prev - 1);
     fetchHistory();
 
-    const spinDuration = 5000; // ระยะเวลาในการเลื่อน
-    const spinInterval = 100;  // เวลาที่ใช้ในการเลื่อนแต่ละรอบ
-    let spinCount = spinDuration / spinInterval;
-
     // สร้างรายการไอเท็มปลอมและเพิ่มไอเท็มจริงไว้สุดท้าย
     let rollingItems = [...itemList.filter(i => i.item !== data.item)];
     rollingItems.push({ item: data.item });
 
     setItemList([...rollingItems]);
 
-    const interval = setInterval(() => {
-      if (rollingItems.length > 1) {
-        rollingItems = rollingItems.slice(1); // ลบไอเท็มออกทีละชิ้น
-        setItemList([...rollingItems]);
-      }
+    // สร้างแอนิเมชันไอเท็มจางหายไป
+    let fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
+    setFadingItemList(fadingItems);
 
-      spinCount--;
-      if (spinCount <= 0 || rollingItems.length === 1) {
-        clearInterval(interval);
-        setIsRolling(false); // หยุดแอนิเมชันเมื่อถึงเวลาหรือเหลือแค่ไอเท็มสุดท้าย
+    let fadeCount = fadingItems.length;
+    const fadeInterval = setInterval(() => {
+      fadingItems = fadingItems.map(item => {
+        return {
+          ...item,
+          opacity: item.opacity - 0.1, // ลดความทึบลงทีละน้อย
+        };
+      });
+
+      setFadingItemList([...fadingItems]);
+
+      // ถ้า opacity ของไอเท็มแต่ละชิ้นลดลงจนถึง 0, หยุดการทำงานของแอนิเมชัน
+      if (fadingItems.every(item => item.opacity <= 0)) {
+        clearInterval(fadeInterval);
       }
-    }, spinInterval);
+    }, 100); // ปรับระยะเวลาให้เหมาะสม
   };
 
   const handleAdminAddToken = async () => {
@@ -147,21 +146,19 @@ export default function App() {
             <h2>🎮 N-age Warzone Gacha!!</h2>
             <div className="token-display">Token คงเหลือ: {token}</div>
             <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-            <button className="btn btn-gacha" onClick={handleDraw} disabled={isRolling}>
-              {isRolling ? 'กำลังสุ่ม...' : 'สุ่มไอเท็ม 🔮'}
+            <button className="btn btn-gacha" onClick={handleDraw}>
+              สุ่มไอเท็ม 🔮
             </button>
 
-            {isRolling && (
-              <div className="item-list-container">
-                {itemList.map((item, index) => (
-                  <div className="item" key={index}>
-                    {item.item}
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="item-list-container">
+              {fadingItemList.map((item, index) => (
+                <div className="item" key={index} style={{ opacity: item.opacity }}>
+                  {item.item}
+                </div>
+              ))}
+            </div>
 
-            {item && !isRolling && (
+            {item && (
               <div className="item-display-card">
                 <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
                 <div className="character-name">ตัวละคร: {item.character}</div>
