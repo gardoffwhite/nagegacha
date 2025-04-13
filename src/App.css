@@ -16,8 +16,6 @@
   width: 100%;
   max-width: 1200px;
   margin-top: 20px;
-  flex-wrap: wrap;
-  gap: 20px;
 }
 
 .dashboard-container, .history-container, .rate-container {
@@ -28,8 +26,7 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 350px;
+  width: 30%;
   color: black;
 }
 
@@ -171,47 +168,24 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .dashboard-container, .history-container, .rate-container {
-    width: 90%;
-    margin-bottom: 20px;
-  }
-}
-
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
-    align-items: center;
+    justify-content: center;
   }
 
   .dashboard-container, .history-container, .rate-container {
     width: 100%;
     margin-bottom: 20px;
   }
+
+  .rate-container {
+    order: 2; /* ให้ rate-container ปรากฏหลังจาก container อื่นๆ */
+  }
 }
 
-@media (max-width: 480px) {
-  .item-display-card {
-    width: 90%;
-  }
-
-  .item-name {
-    font-size: 20px;
-  }
-
-  .character-name {
-    font-size: 16px;
-  }
-
-  .btn {
-    width: 100%;
-    padding: 12px 0;
-  }
+.rate-container {
+  margin-left: auto; /* ปรับตารางให้ไปอยู่ขวาของหน้าจอ */
 }
 
 .item-list-container {
@@ -270,7 +244,7 @@
 }
 
 .diamond-glow {
-  height: 60px;
+  height: 50px;
   width: auto;
   vertical-align: middle;
   animation: sparkle-img 1.5s infinite alternate;
