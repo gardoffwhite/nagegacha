@@ -235,7 +235,8 @@
 }
 
 .diamond-glow {
-  height: 26px;
+    height: 50px; /* เพิ่มความสูง */
+  width: auto; /* ปรับความกว้างตามอัตราส่วน */
   vertical-align: middle;
   animation: sparkle-img 1.5s infinite alternate;
   filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
@@ -280,4 +281,12 @@
 .rate-table td:nth-child(2) {
   width: 30%;
 }
+.history-table th,
+.history-table td {
+  text-align: left; /* จัดข้อความชิดซ้าย */
+  padding-left: 12px; /* เพิ่มระยะห่างด้านซ้ายเล็กน้อยเพื่อให้ดูไม่ติดขอบ */
+}
+
+
+
 
