@@ -221,6 +221,18 @@
     0 0 20px #ff0000,
     0 0 30px #ff0000;
   animation: sparkle 1.5s infinite alternate;
+.gacha-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.gacha-logo {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+}
+
 }
 
 .diamond-glow {
