@@ -91,6 +91,7 @@
   color: black;
 }
 
+/* Animation for fading items */
 .rolling-container {
   overflow: hidden;
   height: 60px;
@@ -102,19 +103,16 @@
   position: relative;
 }
 
-/* Rolling Animation */
 .rolling-strip {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transform: translateY(0);
-  transition: transform 100s cubic-bezier(0.0, 0.0, 0.2, 1); /* เพิ่ม cubic-bezier */
+  opacity: 1;
 }
 
 .rolling-strip.animate {
-  animation: scrollToItem 100s cubic-bezier(0.0, 0.0, 0.2, 1) forwards; /* เพิ่ม cubic-bezier */
+  animation: fadeOutItems 10s ease-in-out forwards;
 }
-
 
 .rolling-item {
   padding: 10px;
@@ -127,12 +125,15 @@
   opacity: 1;
 }
 
-@keyframes scrollToItem {
+@keyframes fadeOutItems {
   0% {
-    transform: translateY(0);
+    opacity: 1;
   }
-  2000% {
-    transform: translateY(var(--scroll-offset));
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
