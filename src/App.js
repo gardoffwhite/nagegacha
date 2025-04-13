@@ -61,54 +61,57 @@ export default function App() {
   };
 
   const handleDraw = async () => {
-    if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
-    if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
+  if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
+  if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
 
-    const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
-    const res = await fetch(url);
-    const data = await res.json();
+  // รีเซ็ตการแสดงผลของ displayCard ให้หายไปก่อน
+  setItem(null);
+  
+  const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
+  const res = await fetch(url);
+  const data = await res.json();
 
-    if (data === 'NotEnoughTokens') {
-      alert('Token ไม่พอ!');
-      return;
+  if (data === 'NotEnoughTokens') {
+    alert('Token ไม่พอ!');
+    return;
+  }
+
+  // ลด Token ทันที
+  setToken((prev) => prev - 1);
+  
+  // สร้างรายการสุ่มทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
+  const rollingItems = [...itemList];
+  const fadingItems = rollingItems.map((it) => {
+    if (it.item === data.item) {
+      return { ...it, opacity: 1, isDrawn: true };
     }
+    return { ...it, opacity: 1, isDrawn: false };
+  });
+  setFadingItemList([...fadingItems]);
 
-    // ลด Token ทันที
-    setToken((prev) => prev - 1);
-    // ไม่ setItem และไม่ fetchHistory ทันที เพื่อไม่ให้แสดงผลก่อนแอนิเมชั่นจบ
+  // สุ่มลำดับ index สำหรับไอเท็มที่ไม่ใช่ไอเท็มที่สุ่มได้จริง
+  let indexToFade = fadingItems
+    .map((item, index) => ({ index, isDrawn: item.isDrawn }))
+    .filter((entry) => !entry.isDrawn)
+    .map((entry) => entry.index);
+  indexToFade = indexToFade.sort(() => Math.random() - 0.5);
 
-    // สร้างรายการสุ่มทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
-    const rollingItems = [...itemList];
-    const fadingItems = rollingItems.map((it) => {
-      if (it.item === data.item) {
-        return { ...it, opacity: 1, isDrawn: true };
-      }
-      return { ...it, opacity: 1, isDrawn: false };
-    });
+  let current = 0;
+  const fadeInterval = setInterval(() => {
+    const fadingIndex = indexToFade[current];
+    fadingItems[fadingIndex].opacity = 0;
     setFadingItemList([...fadingItems]);
 
-    // สุ่มลำดับ index สำหรับไอเท็มที่ไม่ใช่ไอเท็มที่สุ่มได้จริง
-    let indexToFade = fadingItems
-      .map((item, index) => ({ index, isDrawn: item.isDrawn }))
-      .filter((entry) => !entry.isDrawn)
-      .map((entry) => entry.index);
-    indexToFade = indexToFade.sort(() => Math.random() - 0.5);
+    current++;
+    if (current >= indexToFade.length) {
+      clearInterval(fadeInterval);
+      // เมื่อแอนิเมชั่นจบแล้ว ให้แสดงการ์ดไอเท็มและอัปเดตประวัติ
+      setItem(data);  // ตั้งค่าของไอเท็มที่สุ่มได้
+      fetchHistory();
+    }
+  }, 300);
+};
 
-    let current = 0;
-    const fadeInterval = setInterval(() => {
-      const fadingIndex = indexToFade[current];
-      fadingItems[fadingIndex].opacity = 0;
-      setFadingItemList([...fadingItems]);
-
-      current++;
-      if (current >= indexToFade.length) {
-        clearInterval(fadeInterval);
-        // เมื่อแอนิเมชั่นจบแล้ว ให้แสดงการ์ดไอเท็มและอัปเดตประวัติ
-        setItem(data);
-        fetchHistory();
-      }
-    }, 300);
-  };
 
   const handleAdminAddToken = async () => {
     const params = new URLSearchParams({
