@@ -64,7 +64,6 @@ export default function App() {
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
 
-    // ดึงไอเท็มที่สุ่มได้จริงจาก backend ก่อน
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
@@ -74,37 +73,31 @@ export default function App() {
       return;
     }
 
-    // ตั้งค่าไอเท็มที่ได้ไว้ล่วงหน้า
     setItem(data);
     setToken((prev) => prev - 1);
     fetchHistory();
 
-    // สร้างรายการไอเท็มปลอมและเพิ่มไอเท็มจริงไว้สุดท้าย
     let rollingItems = [...itemList.filter(i => i.item !== data.item)];
+    rollingItems = rollingItems.slice(0, 9); // จำกัดให้โชว์ไม่เยอะเกิน
     rollingItems.push({ item: data.item });
 
-    setItemList([...rollingItems]);
+    const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
+    setFadingItemList([...fadingItems]);
 
-    // สร้างแอนิเมชันไอเท็มจางหายไป
-    let fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
-    setFadingItemList(fadingItems);
+    let indexToFade = [...Array(fadingItems.length - 1).keys()];
+    indexToFade = indexToFade.sort(() => Math.random() - 0.5);
 
-    let fadeCount = fadingItems.length;
+    let current = 0;
     const fadeInterval = setInterval(() => {
-      fadingItems = fadingItems.map(item => {
-        return {
-          ...item,
-          opacity: item.opacity - 0.1, // ลดความทึบลงทีละน้อย
-        };
-      });
-
+      const fadingIndex = indexToFade[current];
+      fadingItems[fadingIndex].opacity = 0;
       setFadingItemList([...fadingItems]);
 
-      // ถ้า opacity ของไอเท็มแต่ละชิ้นลดลงจนถึง 0, หยุดการทำงานของแอนิเมชัน
-      if (fadingItems.every(item => item.opacity <= 0)) {
+      current++;
+      if (current >= indexToFade.length) {
         clearInterval(fadeInterval);
       }
-    }, 100); // ปรับระยะเวลาให้เหมาะสม
+    }, 300);
   };
 
   const handleAdminAddToken = async () => {
@@ -146,13 +139,11 @@ export default function App() {
             <h2>🎮 N-age Warzone Gacha!!</h2>
             <div className="token-display">Token คงเหลือ: {token}</div>
             <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-            <button className="btn btn-gacha" onClick={handleDraw}>
-              สุ่มไอเท็ม 🔮
-            </button>
+            <button className="btn btn-gacha" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
 
             <div className="item-list-container">
               {fadingItemList.map((item, index) => (
-                <div className="item" key={index} style={{ opacity: item.opacity }}>
+                <div className="item" key={index} style={{ opacity: item.opacity, transition: 'opacity 0.5s ease' }}>
                   {item.item}
                 </div>
               ))}
