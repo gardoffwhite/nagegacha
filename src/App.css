@@ -76,6 +76,10 @@
 
 .btn-logout {
   background-color: #e60000;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
 }
 
 .btn:hover {
@@ -186,6 +190,7 @@
   justify-content: center;
   margin-top: 20px;
   gap: 8px;
+  padding-bottom: 60px; /* เพิ่มพื้นที่ด้านล่างให้มีปุ่ม logout */
 }
 
 .item {
@@ -196,7 +201,8 @@
   font-weight: bold;
   color: #d35400;
   transition: opacity 0.5s ease;
-  opacity: 1; /* เริ่มต้นให้มีความทึบ */
+  opacity: 1;
+  font-size: 14px;
 }
 
 .item.fade-out {
