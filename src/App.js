@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -17,8 +17,8 @@ export default function App() {
   const [rate, setRate] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [fadingItemList, setFadingItemList] = useState([]);
-  const [isDrawing, setIsDrawing] = useState(false);  // ตัวแปรใหม่เพื่อป้องกันการกดปุ่มซ้ำ
-  const [showCard, setShowCard] = useState(false);  // สถานะในการแสดง display card
+  const [isDrawing, setIsDrawing] = useState(false); // ตัวแปรใหม่เพื่อป้องกันการกดปุ่มซ้ำ
+  const [showCard, setShowCard] = useState(false); // สถานะในการแสดง display card
 
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
@@ -63,9 +63,9 @@ export default function App() {
   };
 
   const handleDraw = async () => {
-    if (isDrawing) return;  // ถ้ามีการสุ่มแล้วจะไม่ให้กดปุ่มอีก
-    setIsDrawing(true);  // ตั้งค่า isDrawing เป็น true เพื่อเริ่มต้นแอนิเมชัน
-    setShowCard(false);  // ซ่อน display card ก่อนการสุ่มใหม่
+    if (isDrawing) return; // ถ้ามีการสุ่มแล้วจะไม่ให้กดปุ่มอีก
+    setIsDrawing(true); // ตั้งค่า isDrawing เป็น true เพื่อเริ่มต้นแอนิเมชัน
+    setShowCard(false); // ซ่อน display card ก่อนการสุ่มใหม่
 
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
@@ -76,7 +76,7 @@ export default function App() {
 
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
-      setIsDrawing(false);  // ตั้งค่า isDrawing เป็น false หากไม่มี Token
+      setIsDrawing(false); // ตั้งค่า isDrawing เป็น false หากไม่มี Token
       return;
     }
 
@@ -84,11 +84,9 @@ export default function App() {
     setToken((prev) => prev - 1); // ลดจำนวน Token
     fetchHistory();
 
-    // สร้างรายการไอเท็มที่ใช้ในการแสดงแอนิเมชัน
+    // สุ่มรายการไอเท็มทั้งหมด
     let rollingItems = [...itemList.filter(i => i.item !== data.item)];
     rollingItems.push({ item: data.item }); // เพิ่มไอเท็มที่สุ่มได้ไปที่ท้ายรายการ
-
-    rollingItems = rollingItems.slice(0, 9); // จำกัดจำนวนให้โชว์ไม่เกิน 9 รายการ
 
     // แปลงรายการไอเท็มให้เป็น object ที่มี opacity เพื่อใช้ในแอนิเมชัน
     const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
