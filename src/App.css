@@ -1,4 +1,4 @@
-.app-container { 
+.app-container {
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
   text-align: center;
@@ -10,20 +10,18 @@
   color: black;
 }
 
-/* ลดความกว้างของ container ลง */
 .container {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  max-width: 900px; /* ลดจาก 1200px */
+  max-width: 1200px;
   margin-top: 20px;
 }
 
-/* ปรับความกว้างของแต่ละส่วนและชิดซ้าย */
 .dashboard-container, .history-container, .rate-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* ชิดซ้าย */
+  align-items: center;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
@@ -32,7 +30,6 @@
   color: black;
 }
 
-/* ปรับตารางให้ตัวอักษรชิดซ้าย และปรับขนาดฟอนต์ให้เหมาะสม */
 .history-table, .rate-table {
   margin-top: 20px;
   width: 100%;
@@ -40,11 +37,10 @@
   color: black;
 }
 
-.history-table th, .history-table td, 
-.rate-table th, .rate-table td {
+.history-table th, .history-table td, .rate-table th, .rate-table td {
   padding: 10px;
   border: 1px solid #ddd;
-  text-align: left; /* ชิดซ้าย */
+  text-align: center;
   font-size: 14px;
   color: black;
 }
@@ -53,14 +49,7 @@
   background-color: #f0f0f0;
 }
 
-/* กำหนดความกว้างให้คอลัมน์เวลาในตารางประวัติ */
-.history-table td:nth-child(3),
-.history-table th:nth-child(3) {
-  width: 120px; /* ความกว้างพอเหมาะสำหรับรูปแบบ "14/04/25 04:23" */
-}
-
-.history-table tr:nth-child(even), 
-.rate-table tr:nth-child(even) {
+.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
