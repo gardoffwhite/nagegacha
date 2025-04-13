@@ -178,3 +178,31 @@
     margin-bottom: 20px;
   }
 }
+
+/* ส่วนใหม่ที่เพิ่มมา */
+.item-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 8px;
+}
+
+.item {
+  background-color: #fff8e1;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  color: #d35400;
+  transition: opacity 0.5s ease;
+  opacity: 1; /* เริ่มต้นให้มีความทึบ */
+}
+
+.item.fade-out {
+  opacity: 0; /* ทำให้ไอเท็มจางหายไป */
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
