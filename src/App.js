@@ -146,7 +146,14 @@ export default function App() {
       {view === 'dashboard' && (
         <div className="container">
           <div className="dashboard-container">
-            <h2>🎮 N-age Warzone Gacha!!</h2>
+           <div className="gacha-header">
+  <img
+    src="https://marketplace.canva.com/EAFsLnngjtg/1/0/1600w/canva-red-and-black-gaming-logo-gacha-graphic-DAGkjT-D7ms.png"
+    alt="N-age Warzone Gacha"
+    className="gacha-logo"
+  />
+</div>
+
             <div className="diamond-text">
   <img src="https://i.imgur.com/9uEjL4T.png" alt="Redattospectrum " className="diamond-glow" />
   Red attospectrum
