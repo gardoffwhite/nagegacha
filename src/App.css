@@ -16,6 +16,8 @@
   width: 100%;
   max-width: 1200px;
   margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .dashboard-container, .history-container, .rate-container {
@@ -26,7 +28,8 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 30%;
+  width: 100%;
+  max-width: 350px;
   color: black;
 }
 
@@ -168,9 +171,22 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dashboard-container, .history-container, .rate-container {
+    width: 90%;
+    margin-bottom: 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
+    align-items: center;
   }
 
   .dashboard-container, .history-container, .rate-container {
@@ -179,7 +195,25 @@
   }
 }
 
-/* ส่วนใหม่ที่เพิ่มมา */
+@media (max-width: 480px) {
+  .item-display-card {
+    width: 90%;
+  }
+
+  .item-name {
+    font-size: 20px;
+  }
+
+  .character-name {
+    font-size: 16px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px 0;
+  }
+}
+
 .item-list-container {
   display: flex;
   flex-wrap: wrap;
@@ -196,11 +230,11 @@
   font-weight: bold;
   color: #d35400;
   transition: opacity 0.5s ease;
-  opacity: 1; /* เริ่มต้นให้มีความทึบ */
+  opacity: 1;
 }
 
 .item.fade-out {
-  opacity: 0; /* ทำให้ไอเท็มจางหายไป */
+  opacity: 0;
   height: 0;
   margin: 0;
   padding: 0;
@@ -221,6 +255,8 @@
     0 0 20px #ff0000,
     0 0 30px #ff0000;
   animation: sparkle 1.5s infinite alternate;
+}
+
 .gacha-header {
   display: flex;
   justify-content: center;
@@ -228,17 +264,14 @@
 }
 
 .gacha-logo {
-  max-width: 50%; /* ใช้ 100% ของขนาด container */
-  height: auto; /* ให้ความสูงอัตโนมัติตามอัตราส่วน */
-  object-fit: contain; /* ให้แน่ใจว่าโลโก้จะไม่ล้นออกจาก container */
-}
-
-
+  max-width: 50%;
+  height: auto;
+  object-fit: contain;
 }
 
 .diamond-glow {
-    height: 50px; /* เพิ่มความสูง */
-  width: auto; /* ปรับความกว้างตามอัตราส่วน */
+  height: 60px;
+  width: auto;
   vertical-align: middle;
   animation: sparkle-img 1.5s infinite alternate;
   filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
@@ -273,6 +306,7 @@
     filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
   }
 }
+
 .rate-table th:nth-child(1),
 .rate-table td:nth-child(1) {
   width: 40%;
@@ -283,12 +317,3 @@
 .rate-table td:nth-child(2) {
   width: 10%;
 }
-.history-table th,
-.history-table td {
-  text-align: left; /* จัดข้อความชิดซ้าย */
-  padding-left: 12px; /* เพิ่มระยะห่างด้านซ้ายเล็กน้อยเพื่อให้ดูไม่ติดขอบ */
-}
-
-
-
-
