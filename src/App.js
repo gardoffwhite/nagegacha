@@ -86,7 +86,9 @@ export default function App() {
 
     // สุ่มรายการไอเท็มทั้งหมด
     let rollingItems = [...itemList.filter(i => i.item !== data.item)];
-    rollingItems.push({ item: data.item }); // เพิ่มไอเท็มที่สุ่มได้ไปที่ท้ายรายการ
+const randomIndex = Math.floor(Math.random() * (rollingItems.length + 1));
+rollingItems.splice(randomIndex, 0, { item: data.item }); // <--- ไอเท็มสุ่มจะอยู่ตำแหน่งสุ่ม
+
 
     // แปลงรายการไอเท็มให้เป็น object ที่มี opacity เพื่อใช้ในแอนิเมชัน
     const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
