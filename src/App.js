@@ -24,7 +24,7 @@ export default function App() {
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
     const data = await res.json();
-    setHistory(data.slice(0, 20));
+    setHistory(data.slice(0, 20));  // Show the latest 20 history
   };
 
   const fetchItemList = async () => {
@@ -71,7 +71,6 @@ export default function App() {
     setIsRolling(true);
     setItem(null);
 
-    // ดึงผลลัพธ์จาก backend ก่อน
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
@@ -86,18 +85,16 @@ export default function App() {
     setToken((prev) => prev - 1);
     fetchHistory();
 
-    // สร้างไอเท็มที่ใช้แสดงผลในแอนิเมชัน
     const totalItems = 50;
     const items = [];
     for (let i = 0; i < totalItems - 1; i++) {
       const random = itemList[Math.floor(Math.random() * itemList.length)];
       items.push(random);
     }
-    items.push(data); // แทรกไอเท็มสุดท้ายเป็นของจริง
+    items.push(data);
 
     setItemList(items);
 
-    // เริ่มแอนิเมชัน
     setTimeout(() => {
       if (rollingRef.current) {
         rollingRef.current.style.transition = 'transform 3s ease-out';
@@ -105,7 +102,6 @@ export default function App() {
       }
     }, 100);
 
-    // แสดงผลเมื่อแอนิเมชันจบ
     setTimeout(() => {
       setItem(data);
       setIsRolling(false);
