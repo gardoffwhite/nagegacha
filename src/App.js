@@ -67,8 +67,17 @@ export default function App() {
     setIsDrawing(true); // ตั้งค่า isDrawing เป็น true เพื่อเริ่มต้นแอนิเมชัน
     setShowCard(false); // ซ่อน display card ก่อนการสุ่มใหม่
 
-    if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
-    if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
+    if (token <= 0) {
+      alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
+      setIsDrawing(false);
+      return;
+    }
+
+    if (!characterName) {
+      alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
+      setIsDrawing(false);
+      return;
+    }
 
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
@@ -76,7 +85,7 @@ export default function App() {
 
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
-      setIsDrawing(false); // ตั้งค่า isDrawing เป็น false หากไม่มี Token
+      setIsDrawing(false);
       return;
     }
 
@@ -86,9 +95,8 @@ export default function App() {
 
     // สุ่มรายการไอเท็มทั้งหมด
     let rollingItems = [...itemList.filter(i => i.item !== data.item)];
-const randomIndex = Math.floor(Math.random() * (rollingItems.length + 1));
-rollingItems.splice(randomIndex, 0, { item: data.item }); // <--- ไอเท็มสุ่มจะอยู่ตำแหน่งสุ่ม
-
+    const randomIndex = Math.floor(Math.random() * (rollingItems.length + 1));
+    rollingItems.splice(randomIndex, 0, { item: data.item }); // <--- ไอเท็มสุ่มจะอยู่ตำแหน่งสุ่ม
 
     // แปลงรายการไอเท็มให้เป็น object ที่มี opacity เพื่อใช้ในแอนิเมชัน
     const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
