@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzib6C9lGk23Zemy9f0Vj78E5eK8-TQBIaZEGPE5l0FT2Kc0-vDbdfK5xsRG58qmseGsA/exec';
@@ -16,23 +16,23 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([]);
-  const [itemList, setItemList] = useState([]);
-  const [finalItem, setFinalItem] = useState(null);
+  const [itemList, setItemList] = useState([]); // State to store item list
 
-  const rollingRef = useRef(null);
-
+  // Fetch history
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
     const data = await res.json();
-    setHistory(data.slice(0, 20));  // Show the latest 20 history
+    setHistory(data.slice(0, 20));
   };
 
+  // Fetch item list from backend
   const fetchItemList = async () => {
     const res = await fetch(`${BACKEND_URL}?action=itemlist`);
     const data = await res.json();
-    setItemList(data);
+    setItemList(data); // Store item list from backend
   };
 
+  // Fetch rates
   const fetchRate = async () => {
     const res = await fetch(`${BACKEND_URL}?action=getrate`);
     const data = await res.json();
@@ -50,7 +50,7 @@ export default function App() {
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
       fetchHistory();
       fetchRate();
-      fetchItemList();
+      fetchItemList(); // Fetch item list after login
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -71,41 +71,44 @@ export default function App() {
     setIsRolling(true);
     setItem(null);
 
-    const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    // เริ่มหมุนสล็อต
+    const spinDuration = 5000; // ระยะเวลาในการหมุน (5 วินาที)
+    const spinInterval = 100; // ความเร็วในการหมุน
+    let spinCount = spinDuration / spinInterval;
 
-    if (data === 'NotEnoughTokens') {
-      alert('Token ไม่พอ!');
-      setIsRolling(false);
-      return;
-    }
+    // สร้าง array สำหรับแสดงไอเท็ม
+    let rollingItems = Array(30).fill(null).map(() => itemList[Math.floor(Math.random() * itemList.length)]);
 
-    setFinalItem(data);
-    setToken((prev) => prev - 1);
-    fetchHistory();
+    setItemList(rollingItems); // ใช้รายการที่สุ่มขึ้นมาแสดงในขณะหมุน
 
-    const totalItems = 50;
-    const items = [];
-    for (let i = 0; i < totalItems - 1; i++) {
-      const random = itemList[Math.floor(Math.random() * itemList.length)];
-      items.push(random);
-    }
-    items.push(data);
+    const interval = setInterval(() => {
+        rollingItems = rollingItems.map(() => itemList[Math.floor(Math.random() * itemList.length)]);
+        setItemList(rollingItems); // อัปเดตรายการที่หมุน
+        spinCount--;
 
-    setItemList(items);
+        if (spinCount <= 0) {
+            clearInterval(interval); // หยุดการหมุนเมื่อครบเวลา
+            handleFinishDraw(); // เมื่อการหมุนเสร็จ ให้แสดงผลไอเท็ม
+        }
+    }, spinInterval);
 
-    setTimeout(() => {
-      if (rollingRef.current) {
-        rollingRef.current.style.transition = 'transform 3s ease-out';
-        rollingRef.current.style.transform = `translateY(-${(totalItems - 1) * 60}px)`;
-      }
-    }, 100);
+    // ฟังก์ชันที่จะทำเมื่อการหมุนเสร็จ
+    const handleFinishDraw = async () => {
+        // ดึงไอเท็มที่สุ่มได้จาก backend
+        const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-    setTimeout(() => {
-      setItem(data);
-      setIsRolling(false);
-    }, 3500);
+        if (data === 'NotEnoughTokens') {
+            alert('Token ไม่พอ!');
+            setIsRolling(false);
+        } else {
+            setItem(data); // ตั้งค่าไอเท็มที่สุ่มได้จาก backend
+            setToken((prev) => prev - 1);
+            fetchHistory(); // โหลดประวัติการสุ่มใหม่
+            setIsRolling(false);
+        }
+    };
   };
 
   const handleAdminAddToken = async () => {
@@ -153,10 +156,10 @@ export default function App() {
 
             {isRolling && (
               <div className="rolling-container">
-                <div className="rolling-strip" ref={rollingRef}>
-                  {itemList.map((itm, i) => (
+                <div className="rolling-strip">
+                  {Array(30).fill(null).map((_, i) => (
                     <div className="rolling-item" key={i}>
-                      {itm?.item}
+                      {itemList[Math.floor(Math.random() * itemList.length)]?.item} {/* Use the itemList from backend */}
                     </div>
                   ))}
                 </div>
@@ -205,30 +208,15 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {rate.map((rateData, index) => (
+                {rate.map((entry, index) => (
                   <tr key={index}>
-                    <td>{rateData.item}</td>
-                    <td>{rateData.rate}%</td>
+                    <td>{entry.item}</td>
+                    <td>{entry.rate}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
-      )}
-
-      {view === 'admin' && (
-        <div className="admin-container">
-          <h2>ระบบผู้ดูแล</h2>
-          <div className="admin-input">
-            <label>ชื่อผู้ใช้:</label>
-            <input type="text" value={adminUser} onChange={(e) => setAdminUser(e.target.value)} />
-          </div>
-          <div className="admin-input">
-            <label>จำนวน Token ที่ต้องการเพิ่ม:</label>
-            <input type="number" value={adminTokens} onChange={(e) => setAdminTokens(e.target.value)} />
-          </div>
-          <button className="btn" onClick={handleAdminAddToken}>เพิ่ม Token</button>
         </div>
       )}
     </div>
