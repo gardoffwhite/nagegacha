@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: black; /* เปลี่ยนสีตัวอักษรทั้งหมดให้เป็นสีดำ */
+  color: black;
 }
 
 .container {
@@ -27,14 +27,14 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 30%;
-  color: black; /* สีตัวอักษรในส่วนนี้ */
+  color: black;
 }
 
 .history-table, .rate-table {
   margin-top: 20px;
   width: 100%;
   border-collapse: collapse;
-  color: black; /* สีตัวอักษรในตาราง */
+  color: black;
 }
 
 .history-table th, .history-table td, .rate-table th, .rate-table td {
@@ -42,7 +42,7 @@
   border: 1px solid #ddd;
   text-align: center;
   font-size: 14px;
-  color: black; /* สีตัวอักษรในตาราง */
+  color: black;
 }
 
 .history-table th, .rate-table th {
@@ -57,12 +57,12 @@
   margin-bottom: 10px;
   font-weight: bold;
   font-size: 18px;
-  color: black; /* เปลี่ยนสีตัวอักษรของ token */
+  color: black;
 }
 
 .btn {
   background-color: #00c8ff;
-  color: white; /* สีตัวอักษรในปุ่ม: ขาว */
+  color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -88,7 +88,7 @@
   width: 80%;
   border-radius: 8px;
   border: 1px solid #ddd;
-  color: black; /* สีตัวอักษรใน input */
+  color: black;
 }
 
 .item-display-card {
@@ -99,25 +99,25 @@
   margin-top: 20px;
   width: 80%;
   text-align: center;
-  animation: pulse 1s ease-in-out infinite; /* เพิ่มแอนิเมชันเพื่อเพิ่มความตื่นเต้น */
+  animation: pulse 1s ease-in-out infinite;
   transition: transform 0.3s ease-in-out;
 }
 
 .item-display-card:hover {
-  transform: scale(1.05); /* เพิ่มเอฟเฟกต์ขยายขณะ hover */
+  transform: scale(1.05);
 }
 
 .item-name {
   font-size: 26px;
   font-weight: bold;
-  color: #ff5733; /* สีส้มสดใส */
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงาให้ตัวอักษรดูเด่น */
+  color: #ff5733;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
   margin-bottom: 15px;
 }
 
 .character-name {
   font-size: 18px;
-  color: #2c3e50; /* สีเทาเข้ม */
+  color: #2c3e50;
   font-weight: 500;
   margin-top: 15px;
   animation: fadeIn 2s ease-in-out;
@@ -134,17 +134,16 @@
   100% { opacity: 1; }
 }
 
-/* ปรับลบระบบสุ่มเก่าออก */
 .rolling-container {
-  display: none; /* ลบส่วนที่เกี่ยวกับการแสดงผลการสุ่มแบบเก่า */
+  display: none;
 }
 
 .rolling-strip {
-  display: none; /* ลบส่วนที่เกี่ยวกับการแสดงผลการสุ่มแบบเก่า */
+  display: none;
 }
 
 .rolling-item {
-  display: none; /* ลบส่วนที่เกี่ยวกับการแสดงผลการสุ่มแบบเก่า */
+  display: none;
 }
 
 /* Responsive Design */
@@ -160,7 +159,6 @@
 }
 
 /* 👇 ส่วนใหม่สำหรับระบบสุ่มแบบค่อยๆจางหาย */
-
 .fade-out {
   animation: fadeOut 0.3s forwards;
 }
