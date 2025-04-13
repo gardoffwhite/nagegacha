@@ -11,8 +11,6 @@ export default function App() {
   const [token, setToken] = useState(0);
   const [item, setItem] = useState(null);
   const [view, setView] = useState('login');
-  const [adminUser, setAdminUser] = useState('');
-  const [adminTokens, setAdminTokens] = useState(0);
   const [history, setHistory] = useState([]);
   const [rate, setRate] = useState([]);
   const [itemList, setItemList] = useState([]);
@@ -62,81 +60,78 @@ export default function App() {
     }
   };
 
- const handleDraw = async () => {
-  if (isDrawing) return;
-  setIsDrawing(true);
-  setShowCard(false);
+  const handleDraw = async () => {
+    if (isDrawing) return;
+    setIsDrawing(true);
+    setShowCard(false);
 
-  if (token <= 0) {
-    alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
-    setIsDrawing(false);
-    return;
-  }
-
-  if (!characterName) {
-    alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
-    setIsDrawing(false);
-    return;
-  }
-
-  const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
-  const res = await fetch(url);
-  const data = await res.json();
-
-  if (data === 'NotEnoughTokens') {
-    alert('Token ไม่พอ!');
-    setIsDrawing(false);
-    return;
-  }
-
-  setItem(data);
-  setToken((prev) => prev - 1);
-  fetchHistory();
-
-  // สุ่มรายการไอเท็มทั้งหมด
-  let rollingItems = [...itemList.filter(i => i.item !== data.item)];
-  const randomIndex = Math.floor(Math.random() * (rollingItems.length + 1));
-  rollingItems.splice(randomIndex, 0, { item: data.item });
-
-  // แปลงรายการไอเท็มให้เป็น object ที่มี opacity เพื่อใช้ในแอนิเมชัน
-  const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
-  setFadingItemList([...fadingItems]);
-
-  // สุ่มลำดับการทำให้หายไปทีละรายการ
-  let indexToFade = [...Array(fadingItems.length - 1).keys()];
-  indexToFade = indexToFade.sort(() => Math.random() - 0.5);
-
-  let current = 0;
-  const fadeInterval = setInterval(() => {
-    // ตรวจสอบหากถึงไอเท็มสุดท้ายให้หยุดแอนิเมชัน
-    if (current >= fadingItems.length - 1) {
-      setFadingItemList(prevState => {
-        const lastItem = [...prevState];
-        lastItem[lastItem.length - 1].opacity = 1; // ไอเท็มสุดท้ายจะคงไว้
-        return lastItem;
-      });
-
-      // แสดง display card หลังแอนิเมชันเสร็จ
-      setTimeout(() => {
-        setShowCard(true);
-      }, 300);
-
-      clearInterval(fadeInterval);
+    if (token <= 0) {
+      alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
       setIsDrawing(false);
       return;
     }
 
-    // ทำให้รายการไอเท็มหายไปทีละรายการ
-    const fadingIndex = indexToFade[current];
-    fadingItems[fadingIndex].opacity = 0;
+    if (!characterName) {
+      alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
+      setIsDrawing(false);
+      return;
+    }
+
+    const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data === 'NotEnoughTokens') {
+      alert('Token ไม่พอ!');
+      setIsDrawing(false);
+      return;
+    }
+
+    setItem(data);
+    setToken((prev) => prev - 1);
+    fetchHistory();
+
+    // สุ่มรายการไอเท็มทั้งหมด
+    let rollingItems = [...itemList.filter(i => i.item !== data.item)];
+    const randomIndex = Math.floor(Math.random() * rollingItems.length);
+    rollingItems.splice(randomIndex, 0, { item: data.item });
+
+    // แปลงรายการไอเท็มให้เป็น object ที่มี opacity เพื่อใช้ในแอนิเมชัน
+    const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
     setFadingItemList([...fadingItems]);
 
-    current++;
-  }, 300); // ทำให้ไอเท็มหายทีละชิ้นทุก 300ms
-};
+    // สุ่มลำดับการทำให้หายไปทีละรายการ
+    let indexToFade = [...Array(fadingItems.length - 1).keys()];
+    indexToFade = indexToFade.sort(() => Math.random() - 0.5);
 
+    let current = 0;
+    const fadeInterval = setInterval(() => {
+      // ตรวจสอบหากถึงไอเท็มสุดท้ายให้หยุดแอนิเมชัน
+      if (current >= fadingItems.length - 1) {
+        setFadingItemList(prevState => {
+          const lastItem = [...prevState];
+          lastItem[lastItem.length - 1].opacity = 1; // ไอเท็มสุดท้ายจะคงไว้
+          return lastItem;
+        });
 
+        // แสดง display card หลังแอนิเมชันเสร็จ
+        setTimeout(() => {
+          setShowCard(true);
+        }, 300);
 
+        clearInterval(fadeInterval);
+        setIsDrawing(false);
+        return;
+      }
+
+      // ทำให้รายการไอเท็มหายไปทีละรายการ
+      const fadingIndex = indexToFade[current];
+      fadingItems[fadingIndex].opacity = 0;
+      setFadingItemList([...fadingItems]);
+
+      current++;
+    }, 300); // ทำให้ไอเท็มหายทีละชิ้นทุก 300ms
+  };
 
   const handleAdminAddToken = async () => {
     const params = new URLSearchParams({
