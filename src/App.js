@@ -17,8 +17,6 @@ export default function App() {
   const [rate, setRate] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [fadingItemList, setFadingItemList] = useState([]);
-  const [isDrawing, setIsDrawing] = useState(false); // ตัวแปรใหม่เพื่อป้องกันการกดปุ่มซ้ำ
-  const [showCard, setShowCard] = useState(false); // สถานะในการแสดง display card
 
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
@@ -63,10 +61,6 @@ export default function App() {
   };
 
   const handleDraw = async () => {
-    if (isDrawing) return; // ถ้ามีการสุ่มแล้วจะไม่ให้กดปุ่มอีก
-    setIsDrawing(true); // ตั้งค่า isDrawing เป็น true เพื่อเริ่มต้นแอนิเมชัน
-    setShowCard(false); // ซ่อน display card ก่อนการสุ่มใหม่
-
     if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
 
@@ -76,55 +70,42 @@ export default function App() {
 
     if (data === 'NotEnoughTokens') {
       alert('Token ไม่พอ!');
-      setIsDrawing(false); // ตั้งค่า isDrawing เป็น false หากไม่มี Token
       return;
     }
 
-    setItem(data); // เก็บไอเท็มที่สุ่มได้
-    setToken((prev) => prev - 1); // ลดจำนวน Token
+    // เซ็ตไอเท็มที่สุ่มได้ไว้สำหรับการแสดงในส่วนของ "item-display-card"
+    setItem(data);
+    setToken((prev) => prev - 1);
     fetchHistory();
 
-    // สุ่มรายการไอเท็มทั้งหมด
-    let rollingItems = [...itemList.filter(i => i.item !== data.item)];
-const randomIndex = Math.floor(Math.random() * (rollingItems.length + 1));
-rollingItems.splice(randomIndex, 0, { item: data.item }); // <--- ไอเท็มสุ่มจะอยู่ตำแหน่งสุ่ม
-
-
-    // แปลงรายการไอเท็มให้เป็น object ที่มี opacity เพื่อใช้ในแอนิเมชัน
-    const fadingItems = rollingItems.map(item => ({ ...item, opacity: 1 }));
+    // แสดงรายการทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
+    const rollingItems = [...itemList];
+    const fadingItems = rollingItems.map((it) => {
+      if (it.item === data.item) {
+        return { ...it, opacity: 1, isDrawn: true };
+      }
+      return { ...it, opacity: 1, isDrawn: false };
+    });
     setFadingItemList([...fadingItems]);
 
-    // สุ่มลำดับการทำให้หายไปทีละรายการ
-    let indexToFade = [...Array(fadingItems.length - 1).keys()];
+    // สุ่มลำดับ index สำหรับไอเท็มที่ไม่ใช่ไอเท็มที่สุ่มได้จริง
+    let indexToFade = fadingItems
+      .map((item, index) => ({ index, isDrawn: item.isDrawn }))
+      .filter((entry) => !entry.isDrawn)
+      .map((entry) => entry.index);
     indexToFade = indexToFade.sort(() => Math.random() - 0.5);
 
     let current = 0;
     const fadeInterval = setInterval(() => {
-      // ตรวจสอบหากถึงไอเท็มสุดท้ายให้หยุดแอนิเมชัน
-      if (current >= fadingItems.length - 1) {
-        setFadingItemList(prevState => {
-          const lastItem = [...prevState];
-          lastItem[lastItem.length - 1].opacity = 1; // ไอเท็มสุดท้ายจะคงไว้
-          return lastItem;
-        });
-
-        // แสดง display card หลังแอนิเมชันเสร็จ
-        setTimeout(() => {
-          setShowCard(true);
-        }, 300);  // ปรับเวลาให้ตรงกับช่วงสุดท้ายของแอนิเมชัน
-
-        clearInterval(fadeInterval);
-        setIsDrawing(false);  // ตั้งค่า isDrawing เป็น false เมื่อแอนิเมชันเสร็จ
-        return;
-      }
-
-      // ทำให้รายการไอเท็มหายไปทีละรายการ
       const fadingIndex = indexToFade[current];
       fadingItems[fadingIndex].opacity = 0;
       setFadingItemList([...fadingItems]);
 
       current++;
-    }, 300); // ปรับให้หายทีละชิ้นทุก 300ms
+      if (current >= indexToFade.length) {
+        clearInterval(fadeInterval);
+      }
+    }, 300);
   };
 
   const handleAdminAddToken = async () => {
@@ -166,18 +147,21 @@ rollingItems.splice(randomIndex, 0, { item: data.item }); // <--- ไอเท�
             <h2>🎮 N-age Warzone Gacha!!</h2>
             <div className="token-display">Token คงเหลือ: {token}</div>
             <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
-            <button className="btn btn-gacha" onClick={handleDraw} disabled={isDrawing}>สุ่มไอเท็ม 🔮</button>
+            <button className="btn btn-gacha" onClick={handleDraw}>สุ่มไอเท็ม 🔮</button>
 
             <div className="item-list-container">
               {fadingItemList.map((item, index) => (
-                <div className="item" key={index} style={{ opacity: item.opacity, transition: 'opacity 0.5s ease' }}>
+                <div
+                  className="item"
+                  key={index}
+                  style={{ opacity: item.opacity, transition: 'opacity 0.5s ease' }}
+                >
                   {item.item}
                 </div>
               ))}
             </div>
 
-            {/* แสดง display card หลังจากสุ่มเสร็จ */}
-            {showCard && item && (
+            {item && (
               <div className="item-display-card">
                 <div className="item-name">🎁 คุณได้รับ: {item.item}</div>
                 <div className="character-name">ตัวละคร: {item.character}</div>
