@@ -305,3 +305,33 @@
     z-index: 10;
   }
 }
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .dashboard-container {
+    width: 95%;
+    margin-bottom: 20px;
+    order: -1;
+    z-index: 20;
+  }
+
+  .history-container,
+  .rate-container {
+    width: 95%;
+    max-height: 300px; /* ปรับความสูงที่ต้องการ */
+    overflow-y: auto;
+    margin-bottom: 20px;
+    z-index: 15;
+  }
+
+  .item-display-card {
+    width: 95%;
+    margin-top: 20px;
+    z-index: 10;
+  }
+}
+
