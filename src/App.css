@@ -13,11 +13,9 @@
 .container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   width: 100%;
   max-width: 1200px;
   margin-top: 20px;
-  flex-wrap: wrap;
 }
 
 .dashboard-container, .history-container, .rate-container {
@@ -30,7 +28,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 30%;
   color: black;
-  box-sizing: border-box;
 }
 
 .history-table, .rate-table {
@@ -40,7 +37,8 @@
   color: black;
 }
 
-.history-table th, .history-table td, .rate-table th, .rate-table td {
+.history-table th, .history-table td,
+.rate-table th, .rate-table td {
   padding: 10px;
   border: 1px solid #ddd;
   text-align: center;
@@ -52,7 +50,8 @@
   background-color: #f0f0f0;
 }
 
-.history-table tr:nth-child(even), .rate-table tr:nth-child(even) {
+.history-table tr:nth-child(even),
+.rate-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
@@ -105,7 +104,7 @@
   animation: pulse 1s ease-in-out infinite;
   transition: transform 0.3s ease-in-out;
   position: relative;
-  z-index: 1;
+  z-index: 10;
 }
 
 .item-display-card:hover {
@@ -170,11 +169,6 @@
   font-weight: bold;
   color: #d35400;
   transition: all 0.3s ease;
-}
-
-.rolling-item-box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
 }
 
 .item-list-container {
@@ -281,35 +275,35 @@
   width: 10%;
 }
 
-/* ✅ Responsive Mobile Fix */
+/* ✅ RESPONSIVE DESIGN FIX */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
   }
 
   .dashboard-container {
-    width: 90%;
+    width: 95%;
+    margin-bottom: 20px;
     order: 1;
   }
 
   .history-container {
-    width: 90%;
+    width: 95%;
+    margin-bottom: 20px;
     order: 2;
   }
 
   .rate-container {
-    width: 90%;
+    width: 95%;
+    margin-bottom: 20px;
     order: 3;
-  }
-
-  .item-name {
-    font-size: 20px;
   }
 
   .item-display-card {
     width: 95%;
-    margin-top: 15px;
+    order: 4;
+    margin-top: 20px;
   }
 }
