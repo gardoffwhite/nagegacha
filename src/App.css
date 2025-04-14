@@ -322,7 +322,7 @@
   .history-container,
   .rate-container {
     width: 95%;
-    max-height: 300px; /* กำหนดความสูงที่เหมาะสม */
+    max-height: 200px; /* กำหนดความสูงที่เหมาะสม */
     overflow-y: auto;
     margin-bottom: 100px; /* เพิ่มระยะห่างด้านล่าง */
     z-index: 15;
