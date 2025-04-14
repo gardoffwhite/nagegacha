@@ -28,6 +28,8 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 30%;
   color: black;
+  position: relative;
+  z-index: 20;
 }
 
 .history-table, .rate-table {
@@ -286,24 +288,20 @@
   .dashboard-container {
     width: 95%;
     margin-bottom: 20px;
-    order: 1;
+    order: -1; /* แสดงบนสุดในมือถือ */
+    z-index: 20;
   }
 
-  .history-container {
-    width: 95%;
-    margin-bottom: 20px;
-    order: 2;
-  }
-
+  .history-container,
   .rate-container {
     width: 95%;
     margin-bottom: 20px;
-    order: 3;
+    z-index: 15;
   }
 
   .item-display-card {
     width: 95%;
-    order: 4;
     margin-top: 20px;
+    z-index: 10;
   }
 }
