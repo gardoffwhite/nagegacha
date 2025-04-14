@@ -324,7 +324,7 @@
     width: 95%;
     max-height: 300px; /* กำหนดความสูงที่เหมาะสม */
     overflow-y: auto;
-    margin-bottom: 40px; /* เพิ่มระยะห่างด้านล่าง */
+    margin-bottom: 100px; /* เพิ่มระยะห่างด้านล่าง */
     z-index: 15;
   }
 
