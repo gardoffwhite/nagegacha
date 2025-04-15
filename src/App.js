@@ -132,9 +132,24 @@ export default function App() {
 
   useEffect(() => {
     // ตรวจสอบขนาดหน้าจอเมื่อผู้ใช้เข้าสู่หน้า dashboard
-    if (window.innerWidth <= 768) {
-      setShowAlert(true); // แสดงการแจ้งเตือนถ้าขนาดหน้าจอเล็ก
-    }
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setShowAlert(true); // แสดงการแจ้งเตือนถ้าขนาดหน้าจอเล็ก
+      } else {
+        setShowAlert(false); // ซ่อนการแจ้งเตือนถ้าขนาดหน้าจอใหญ่
+      }
+    };
+
+    // เรียกใช้เมื่อ component ถูก mount
+    handleResize();
+
+    // เพิ่ม event listener สำหรับการเปลี่ยนขนาดหน้าจอ
+    window.addEventListener('resize', handleResize);
+
+    // ลบ event listener เมื่อ component ถูก unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [view]); // รีเฟรชเมื่อเปลี่ยนเป็นหน้า dashboard
 
   return (
