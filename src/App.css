@@ -302,10 +302,18 @@
 
 /* ✅ RESPONSIVE DESIGN FIX */
 @media (max-width: 768px) {
+  .app-container {
+    overflow-x: auto; /* Enable horizontal scrolling for the entire app */
+    max-width: 100vw; /* Ensure it fits the width of the screen */
+    white-space: nowrap; /* Prevent items from wrapping to a new line */
+  }
+
   .container {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row; /* Keep the container in a row for horizontal scrolling */
     justify-content: flex-start;
     align-items: center;
+    width: max-content; /* Ensure the container width adapts to content */
   }
 
   /* ปรับระยะห่างระหว่าง dashboard กับ history-container ในโหมดมือถือ */
