@@ -172,10 +172,10 @@ export default function App() {
             </div>
 
             <div className="diamond-text">
-              <img src="https://i.imgur.com/9uEjL4T.png" alt="Redattospectrum " className="diamond-glow" />
+              <img src="https://i.imgur.com/9uEjL4T.png" alt="RedAttospectrum " className="diamond-glow" />
               Red attospectrum
             </div>
-            <div className="Redattospectrum">คงเหลือ: {token}</div>
+            <div className="RedAttospectrum">คงเหลือ: {token}</div>
 
             <input className="input-field" placeholder="ชื่อตัวละครของคุณ" value={characterName} onChange={(e) => setCharacterName(e.target.value)} />
             <button className="btn btn-gacha" onClick={handleDraw} disabled={isDrawing}>
