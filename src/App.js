@@ -22,7 +22,7 @@ export default function App() {
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
     const data = await res.json();
-    setHistory(data.slice(0, 10));
+    setHistory(data.slice(0, 15));
   };
 
   const fetchItemList = async () => {
