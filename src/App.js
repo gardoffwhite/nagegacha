@@ -19,6 +19,15 @@ export default function App() {
   const [fadingItemList, setFadingItemList] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false); // สถานะการสุ่ม
 
+  // 🆕 ดึงข้อมูลเมื่อเข้าสู่ระบบ
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchHistory();
+      fetchRate();
+      fetchItemList();
+    }
+  }, [isLoggedIn]);
+
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
     const data = await res.json();
@@ -46,9 +55,6 @@ export default function App() {
       setIsLoggedIn(true);
       setToken(result.token || 0);
       setView(result.role === 'admin' ? 'admin' : 'dashboard');
-      fetchHistory();
-      fetchRate();
-      fetchItemList();
     } else if (result.status === 'Registered') {
       alert('สมัครสำเร็จ! ลองเข้าสู่ระบบ');
       setView('login');
@@ -62,13 +68,11 @@ export default function App() {
   };
 
   const handleDraw = async () => {
-    if (isDrawing) return; // 🔒 ป้องกันการกดซ้ำขณะกำลังสุ่ม
+    if (isDrawing) return;
     if (token <= 0) return alert('คุณไม่มี ATTO เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
 
-    setIsDrawing(true); // ตั้งค่าให้กำลังสุ่ม
-
-    // รีเซ็ตการแสดงผลของ displayCard ให้หายไปก่อน
+    setIsDrawing(true);
     setItem(null);
 
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
@@ -77,14 +81,12 @@ export default function App() {
 
     if (data === 'NotEnoughTokens') {
       alert('ATTO ไม่พอ!');
-      setIsDrawing(false); // เปลี่ยนสถานะให้ไม่กำลังสุ่ม
+      setIsDrawing(false);
       return;
     }
 
-    // ลด Token ทันที
     setToken((prev) => prev - 1);
 
-    // สร้างรายการสุ่มทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
     const rollingItems = [...itemList];
     const fadingItems = rollingItems.map((it) => {
       if (it.item === data.item) {
@@ -94,7 +96,6 @@ export default function App() {
     });
     setFadingItemList([...fadingItems]);
 
-    // สุ่มลำดับ index สำหรับไอเท็มที่ไม่ใช่ไอเท็มที่สุ่มได้จริง
     let indexToFade = fadingItems
       .map((item, index) => ({ index, isDrawn: item.isDrawn }))
       .filter((entry) => !entry.isDrawn)
@@ -110,10 +111,9 @@ export default function App() {
       current++;
       if (current >= indexToFade.length) {
         clearInterval(fadeInterval);
-        // เมื่อแอนิเมชั่นจบแล้ว ให้แสดงการ์ดไอเท็มและอัปเดตประวัติ
-        setItem(data);  // ตั้งค่าของไอเท็มที่สุ่มได้
+        setItem(data);
         fetchHistory();
-        setIsDrawing(false); // เปลี่ยนสถานะให้ไม่กำลังสุ่ม
+        setIsDrawing(false);
       }
     }, 300);
   };
@@ -127,6 +127,19 @@ export default function App() {
     const res = await fetch(BACKEND_URL, { method: 'POST', body: params });
     const result = await res.json();
     alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
+  };
+
+  // 🆕 ออกจากระบบ
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername('');
+    setPassword('');
+    setCharacterName('');
+    setToken(0);
+    setItem(null);
+    setFadingItemList([]);
+    setHistory([]);
+    setView('login');
   };
 
   return (
@@ -184,7 +197,7 @@ export default function App() {
               </div>
             )}
 
-            <button className="btn btn-logout" onClick={() => { setIsLoggedIn(false); setView('login'); }}>ออกจากระบบ</button>
+            <button className="btn btn-logout" onClick={handleLogout}>ออกจากระบบ</button>
           </div>
 
           <div className="history-container">
