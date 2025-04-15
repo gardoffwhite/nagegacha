@@ -322,15 +322,17 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
+  /* เพิ่มระยะห่างให้ history และ rate container อยู่ห่างจาก item list */
   .history-container,
   .rate-container {
     width: 95%;
-    margin-bottom: 30px;
+    margin-top: 30px; /* เพิ่มระยะห่างจาก item list */
     z-index: 15;
   }
 
+  /* เพิ่มระยะห่างระหว่างตารางสุ่มและตารางประวัติ */
   .history-table {
-    margin-top: 30px; /* เพิ่มระยะห่างจากตารางสุ่ม */
+    margin-top: 30px; /* เพิ่มระยะห่าง */
   }
 
   .item-display-card {
