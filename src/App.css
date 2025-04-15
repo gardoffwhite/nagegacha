@@ -308,10 +308,11 @@
     align-items: center;
   }
 
+  /* ปรับระยะห่างระหว่าง dashboard กับ history-container ในโหมดมือถือ */
   .dashboard-container {
     width: 95%;
-    margin-bottom: 20px;
-    order: -1;
+    margin-bottom: 40px; /* เพิ่มระยะห่างระหว่าง dashboard และ history container */
+    order: -1; /* ให้ dashboard อยู่บนสุด */
     z-index: 50;
     max-height: 100vh;
     overflow-y: auto;
@@ -324,15 +325,28 @@
   .history-container,
   .rate-container {
     width: 95%;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     z-index: 15;
+  }
+
+  .history-table {
+    margin-top: 30px; /* เพิ่มระยะห่างจากตารางสุ่ม */
   }
 
   .item-display-card {
     width: 95%;
     margin-top: 20px;
     z-index: 10;
+  }
+}
+
+/* สำหรับโหมดปกติ (ไม่ใช่มือถือ) */
+@media (min-width: 769px) {
+  .rate-container {
+    width: 20%; /* ลดขนาด rate-container */
+  }
+
+  .history-container {
+    width: 40%; /* ขยาย history-container */
   }
 }
