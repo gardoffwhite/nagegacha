@@ -90,7 +90,7 @@
 /* คอลัมน์แรก (ชื่อ) ให้กว้างพอดี */
 .rate-table th:nth-child(1),
 .rate-table td:nth-child(1) {
-  width: 60%; /* ลดความกว้าง */
+  width: 50%; /* ลดความกว้าง */
   text-align: left;
 }
 
@@ -128,14 +128,14 @@
 /* ขยายคอลัมน์ให้ประวัติยาวขึ้น */
 .history-table th:nth-child(1),
 .history-table td:nth-child(1) {
-  width: 50%; /* ขยายคอลัมน์แรก */
+  width: 35%; /* ขยายคอลัมน์แรก */
   text-align: left;
 }
 
 /* คอลัมน์อื่นๆ จะเป็น 50% ที่เหลือ */
 .history-table th:nth-child(2),
 .history-table td:nth-child(2) {
-  width: 25%; 
+  width: 35%; 
 }
 
 .history-table th:nth-child(3),
@@ -363,6 +363,7 @@
     filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
   }
 }
+
 /* ข้อความแสดงคำแนะนำด้านล่าง */
 .mobile-message {
   margin-top: 20px;
