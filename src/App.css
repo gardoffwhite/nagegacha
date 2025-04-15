@@ -1,9 +1,9 @@
-.app-container {
+.app-container { 
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
   text-align: center;
-  background: url('https://i.imgur.com/PowFGyp.jpg') no-repeat center center fixed; /* เพิ่มพื้นหลัง */
-  background-size: cover; /* ให้พื้นหลังเต็มจอ */
+  background: url('https://i.imgur.com/PowFGyp.jpg') no-repeat center center fixed;
+  background-size: cover;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -26,13 +26,25 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.85); /* พื้นหลังทึบ 85% */
+  background-color: rgba(255, 255, 255, 0.85);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 30%;
   color: black;
   position: relative;
   z-index: 20;
+}
+
+/* ✅ ปรับขนาด rate และ history container */
+.rate-container {
+  width: 25%;
+}
+
+.history-container {
+  width: 35%;
+}
+
+.dashboard-container {
+  width: 30%;
 }
 
 .history-table,
@@ -64,75 +76,38 @@
   background-color: #f9f9f9;
 }
 
-/* ✅ ทำให้ตัวหนังสือในตารางประวัติชิดซ้าย */
 .history-table td {
   text-align: left;
 }
 
-/* ลดความกว้างของตารางเรท */
-.rate-table th,
-.rate-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-  font-size: 14px;
-  color: black;
-}
-
-.rate-table th {
-  background-color: #f0f0f0;
-}
-
-.rate-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-/* คอลัมน์แรก (ชื่อ) ให้กว้างพอดี */
+/* ✅ ปรับคอลัมน์ตารางเรท */
 .rate-table th:nth-child(1),
 .rate-table td:nth-child(1) {
-  width: 50%; /* ลดความกว้าง */
+  width: auto;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: left;
 }
 
-/* คอลัมน์ที่สอง (จำนวน) แคบที่สุด */
 .rate-table th:nth-child(2),
 .rate-table td:nth-child(2) {
-  width: 20%; /* แคบลง */
+  width: 20%;
 }
 
-/* ขยายความกว้างของตารางประวัติ */
-.history-table {
-  margin-top: 20px;
-  width: 100%;
-  border-collapse: collapse;
-  color: black;
+.rate-table th:nth-child(3),
+.rate-table td:nth-child(3) {
+  width: 20%;
 }
 
-.history-table th,
-.history-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-  font-size: 14px;
-  color: black;
-}
-
-.history-table th {
-  background-color: #f0f0f0;
-}
-
-.history-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-/* ขยายคอลัมน์ให้ประวัติยาวขึ้น */
+/* ✅ ตารางประวัติ */
 .history-table th:nth-child(1),
 .history-table td:nth-child(1) {
-  width: 35%; /* ขยายคอลัมน์แรก */
+  width: 35%;
   text-align: left;
 }
 
-/* คอลัมน์อื่นๆ จะเป็น 50% ที่เหลือ */
 .history-table th:nth-child(2),
 .history-table td:nth-child(2) {
   width: 35%; 
@@ -140,7 +115,7 @@
 
 .history-table th:nth-child(3),
 .history-table td:nth-child(3) {
-  width: 25%; /* ปรับความกว้างให้พอดี */
+  width: 25%;
 }
 
 .token-display {
@@ -216,24 +191,14 @@
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 .fade-out {
@@ -364,20 +329,18 @@
   }
 }
 
-/* ข้อความแสดงคำแนะนำด้านล่าง */
 .mobile-message {
   margin-top: 20px;
   font-size: 14px;
-  color: #555; /* สีอ่อนๆ สำหรับข้อความ */
+  color: #555;
   text-align: center;
 }
 
-/* เปลี่ยนสีข้อความ 'สมัครสมาชิก' เป็นสีน้ำเงิน */
 .signup-text {
-  color: #007bff; /* น้ำเงิน */
+  color: #007bff;
   text-decoration: none;
 }
 
 .signup-text:hover {
-  color: #0056b3; /* สีเข้มขึ้นเมื่อ hover */
+  color: #0056b3;
 }
