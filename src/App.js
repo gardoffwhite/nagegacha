@@ -18,6 +18,7 @@ export default function App() {
   const [itemList, setItemList] = useState([]);
   const [fadingItemList, setFadingItemList] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false); // สถานะการสุ่ม
+  const [showAlert, setShowAlert] = useState(false); // สถานะการแสดงการแจ้งเตือนโหมด Desktop
 
   const fetchHistory = async () => {
     const res = await fetch(`${BACKEND_URL}?action=gethistory`);
@@ -129,6 +130,13 @@ export default function App() {
     alert(result.status === 'TokenAdded' ? 'เติม Token สำเร็จ' : 'ไม่พบผู้ใช้นี้');
   };
 
+  useEffect(() => {
+    // ตรวจสอบขนาดหน้าจอเมื่อผู้ใช้เข้าสู่หน้า dashboard
+    if (window.innerWidth <= 768) {
+      setShowAlert(true); // แสดงการแจ้งเตือนถ้าขนาดหน้าจอเล็ก
+    }
+  }, [view]); // รีเฟรชเมื่อเปลี่ยนเป็นหน้า dashboard
+
   return (
     <div className="app-container">
       {view === 'login' && (
@@ -157,6 +165,12 @@ export default function App() {
             <div className="gacha-header">
               <img src="https://i.imgur.com/hLylouD.png" alt="N-age Warzone Gacha" className="gacha-logo" />
             </div>
+
+            {showAlert && (
+              <div className="alert">
+                <p>เพื่อประสบการณ์ที่ดีที่สุด, กรุณาเปลี่ยนไปใช้โหมด Desktop</p>
+              </div>
+            )}
 
             <div className="diamond-text">
               <img src="https://i.imgur.com/9uEjL4T.png" alt="Redattospectrum " className="diamond-glow" />
