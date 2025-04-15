@@ -322,7 +322,7 @@ container {
     width: 40%;
   }
 }
-.app .alert {
+.alert {
   background-color: #ffcc00;
   color: #333;
   padding: 10px;
@@ -331,5 +331,7 @@ container {
   text-align: center;
   font-size: 16px;
   font-weight: bold;
+  display: block; /* เพิ่มการแสดงผล */
 }
+
 
