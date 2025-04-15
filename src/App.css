@@ -36,11 +36,11 @@
 
 /* ✅ ปรับขนาด rate และ history container */
 .rate-container {
-  width: 25%;
+  width: 20%;
 }
 
 .history-container {
-  width: 35%;
+  width: 40%;
 }
 
 .dashboard-container {
@@ -93,18 +93,18 @@
 
 .rate-table th:nth-child(2),
 .rate-table td:nth-child(2) {
-  width: 18%;
+  width: 15%;
 }
 
 .rate-table th:nth-child(3),
 .rate-table td:nth-child(3) {
-  width: 20%;
+  width: 15%;
 }
 
 /* ✅ ตารางประวัติ */
 .history-table th:nth-child(1),
 .history-table td:nth-child(1) {
-  width: 28%;
+  width: 22%;
   text-align: left;
 }
 
