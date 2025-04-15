@@ -363,3 +363,20 @@
     filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
   }
 }
+/* ข้อความแสดงคำแนะนำด้านล่าง */
+.mobile-message {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555; /* สีอ่อนๆ สำหรับข้อความ */
+  text-align: center;
+}
+
+/* เปลี่ยนสีข้อความ 'สมัครสมาชิก' เป็นสีน้ำเงิน */
+.signup-text {
+  color: #007bff; /* น้ำเงิน */
+  text-decoration: none;
+}
+
+.signup-text:hover {
+  color: #0056b3; /* สีเข้มขึ้นเมื่อ hover */
+}
