@@ -312,19 +312,22 @@
     align-items: center;
   }
 
-  .dashboard-container {
-    width: 95%;
-    margin-bottom: 20px;
-    order: -1;
-    z-index: 20;
-  }
+.dashboard-container {
+  width: 95%;
+  margin-bottom: 20px;
+  order: -1;
+  z-index: 20;
+  max-height: 100vh;       /* ไม่ให้สูงเกินขอบจอ */
+  overflow-y: auto;        /* ถ้าเนื้อหาเกิน ให้เลื่อนดูได้แนวตั้ง */
+}
+
 
   .history-container,
   .rate-container {
     width: 95%;
     max-height: 200px; /* กำหนดความสูงที่เหมาะสม */
     overflow-y: auto;
-    margin-bottom: 100px; /* เพิ่มระยะห่างด้านล่าง */
+    margin-bottom: 40px; /* เพิ่มระยะห่างด้านล่าง */
     z-index: 15;
   }
 
