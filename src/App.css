@@ -326,7 +326,7 @@
   .history-container,
   .rate-container {
     width: 95%;
-    margin-top: 30px; /* เพิ่มระยะห่างจาก item list */
+    margin-top: 100px; /* เพิ่มระยะห่างจาก item list */
     z-index: 15;
   }
 
