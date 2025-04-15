@@ -1,19 +1,21 @@
-.container {
+.app-container {
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
   text-align: center;
   background-color: #f4f4f4;
   min-height: 100vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+}
+
+.container {
+  display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  color: black;
-  overflow: hidden;
+  margin-top: 20px;
 }
 
 .dashboard-container,
@@ -26,21 +28,10 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 30%;
   color: black;
   position: relative;
-  z-index: 10;
-  max-height: 100%;
-  overflow: hidden;
-}
-
-.dashboard-container {
-  width: 40%;
-}
-.history-container {
-  width: 40%;
-}
-.rate-container {
-  width: 20%;
+  z-index: 20;
 }
 
 .history-table,
@@ -72,6 +63,7 @@
   background-color: #f9f9f9;
 }
 
+/* ✅ ทำให้ตัวหนังสือในตารางประวัติชิดซ้าย */
 .history-table td {
   text-align: left;
 }
@@ -124,6 +116,8 @@
   text-align: center;
   animation: pulse 1s ease-in-out infinite;
   transition: transform 0.3s ease-in-out;
+  position: relative;
+  z-index: 10;
 }
 
 .item-display-card:hover {
@@ -164,6 +158,23 @@
   }
   100% {
     opacity: 1;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
 }
 
@@ -278,39 +289,14 @@
   }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-  }
-
-  .dashboard-container,
-  .history-container,
-  .rate-container {
-    width: 100%;
-    margin-bottom: 20px;
-    max-height: none;
-    overflow-y: auto;
-  }
-
-  .item-display-card {
-    width: 95%;
-    margin-top: 20px;
-    z-index: 10;
-  }
+.rate-table th:nth-child(1),
+.rate-table td:nth-child(1) {
+  width: 40%;
+  text-align: left;
 }
 
-.alert {
-  background-color: #ffcc00;
-  color: #333;
-  padding: 10px;
-  margin: 20px;
-  border-radius: 5px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-  display: block;
+.rate-table th:nth-child(2),
+.rate-table td:nth-child(2) {
+  width: 10%;
 }
+
