@@ -63,27 +63,27 @@ export default function App() {
 
   const handleDraw = async () => {
     if (isDrawing) return; // 🔒 ป้องกันการกดซ้ำขณะกำลังสุ่ม
-    if (token <= 0) return alert('คุณไม่มี Token เพียงพอสำหรับการสุ่ม!');
+    if (token <= 0) return alert('คุณไม่มี ATTO เพียงพอสำหรับการสุ่ม!');
     if (!characterName) return alert('ใส่ชื่อตัวละครก่อนสุ่ม!');
 
     setIsDrawing(true); // ตั้งค่าให้กำลังสุ่ม
 
     // รีเซ็ตการแสดงผลของ displayCard ให้หายไปก่อน
     setItem(null);
-  
+
     const url = `${BACKEND_URL}?username=${username}&character=${characterName}`;
     const res = await fetch(url);
     const data = await res.json();
 
     if (data === 'NotEnoughTokens') {
-      alert('Token ไม่พอ!');
+      alert('ATTO ไม่พอ!');
       setIsDrawing(false); // เปลี่ยนสถานะให้ไม่กำลังสุ่ม
       return;
     }
 
     // ลด Token ทันที
     setToken((prev) => prev - 1);
-    
+
     // สร้างรายการสุ่มทั้งหมดจาก itemList โดยเพิ่ม flag isDrawn ให้กับไอเท็มที่สุ่มได้จริง
     const rollingItems = [...itemList];
     const fadingItems = rollingItems.map((it) => {
@@ -230,6 +230,10 @@ export default function App() {
           </div>
         </div>
       )}
+
+      <div className="footer-text">
+        ใช้งานในมือถือ กรุณา ตั้งค่าเปิดใน โหมด DESKTOP
+      </div>
     </div>
   );
 }
