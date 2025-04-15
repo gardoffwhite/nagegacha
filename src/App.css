@@ -64,8 +64,83 @@
   background-color: #f9f9f9;
 }
 
+/* ✅ ทำให้ตัวหนังสือในตารางประวัติชิดซ้าย */
 .history-table td {
   text-align: left;
+}
+
+/* ลดความกว้างของตารางเรท */
+.rate-table th,
+.rate-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+  color: black;
+}
+
+.rate-table th {
+  background-color: #f0f0f0;
+}
+
+.rate-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* คอลัมน์แรก (ชื่อ) ให้กว้างพอดี */
+.rate-table th:nth-child(1),
+.rate-table td:nth-child(1) {
+  width: 60%; /* ลดความกว้าง */
+  text-align: left;
+}
+
+/* คอลัมน์ที่สอง (จำนวน) แคบที่สุด */
+.rate-table th:nth-child(2),
+.rate-table td:nth-child(2) {
+  width: 20%; /* แคบลง */
+}
+
+/* ขยายความกว้างของตารางประวัติ */
+.history-table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  color: black;
+}
+
+.history-table th,
+.history-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+  color: black;
+}
+
+.history-table th {
+  background-color: #f0f0f0;
+}
+
+.history-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* ขยายคอลัมน์ให้ประวัติยาวขึ้น */
+.history-table th:nth-child(1),
+.history-table td:nth-child(1) {
+  width: 50%; /* ขยายคอลัมน์แรก */
+  text-align: left;
+}
+
+/* คอลัมน์อื่นๆ จะเป็น 50% ที่เหลือ */
+.history-table th:nth-child(2),
+.history-table td:nth-child(2) {
+  width: 25%; 
+}
+
+.history-table th:nth-child(3),
+.history-table td:nth-child(3) {
+  width: 25%; /* ปรับความกว้างให้พอดี */
 }
 
 .token-display {
@@ -282,20 +357,9 @@
     filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
   }
   50% {
-    filter: drop-shadow(0 0 15px #ff0000) drop-shadow(0 0 20px #ff0000);
+    filter: drop-shadow(0 0 20px #ff0000) drop-shadow(0 0 30px #ff0000);
   }
   100% {
     filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
   }
-}
-
-.rate-table th:nth-child(1),
-.rate-table td:nth-child(1) {
-  width: 40%;
-  text-align: left;
-}
-
-.rate-table th:nth-child(2),
-.rate-table td:nth-child(2) {
-  width: 10%;
 }
